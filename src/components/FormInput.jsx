@@ -13,10 +13,11 @@ const FormInput = forwardRef(({
   rightIcon, 
   className = '',
   labelClassName = '',
+  isAnimated = true,
   ...props 
 }, ref) => {
   return (
-    <div className="form-group">
+    <div className={`form-group transition-all duration-200 ease-in-out ${isAnimated ? 'hover:-translate-y-0.5' : ''}`}>
       {label && (
         <FormLabel htmlFor={id} required={required} className={labelClassName}>
           {label}
@@ -24,7 +25,7 @@ const FormInput = forwardRef(({
       )}
       <div className="relative">
         {leftIcon && (
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
             {leftIcon}
           </div>
         )}
@@ -37,16 +38,16 @@ const FormInput = forwardRef(({
           {...props}
         />
         {rightIcon && (
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-500">
             {rightIcon}
           </div>
         )}
       </div>
       {helper && !error && (
-        <p className="mt-1 text-sm text-gray-500">{helper}</p>
+        <p className="mt-1 text-sm text-gray-500 transition-opacity duration-200">{helper}</p>
       )}
       {error && (
-        <p className="mt-1 text-sm text-red-500">{error}</p>
+        <p className="mt-1 text-sm text-red-500 animate-fadeIn">{error}</p>
       )}
     </div>
   );

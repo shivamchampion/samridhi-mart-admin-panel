@@ -4,55 +4,107 @@ import { extendTheme } from '@chakra-ui/react';
 // Defining custom colors based on Samridhi Mart branding
 const colors = {
   brand: {
-    50: '#e9ecf6',
-    100: '#c7d0e8',
-    200: '#a5b3d9',
-    300: '#8397ca',
-    400: '#617abb',
+    50: '#eef1fa',
+    100: '#d1d9ef',
+    200: '#b3c0e4',
+    300: '#94a7d9',
+    400: '#768ece',
     500: '#3d5291', // Primary brand color
-    600: '#344780',
-    700: '#2d3e6d',
-    800: '#25345c',
-    900: '#1e2a4a',
+    600: '#344784',
+    700: '#2c3c78',
+    800: '#23316b',
+    900: '#1b2555',
   },
-  gray: {
-    50: '#f8fafc',
-    100: '#f1f5f9',
-    200: '#e2e8f0',
-    300: '#cbd5e1',
-    400: '#94a3b8',
-    500: '#64748b',
-    600: '#475569',
-    700: '#334155',
-    800: '#1e293b',
-    900: '#0f172a',
+  accent: {
+    50: '#fff8e6',
+    100: '#ffedb3',
+    200: '#ffe280',
+    300: '#ffd74d',
+    400: '#ffcc1a',
+    500: '#ffc107', // Accent color
+    600: '#e6ac00',
+    700: '#cc9800',
+    800: '#b38400',
+    900: '#8f6900',
   },
   success: {
-    50: '#ecfdf5',
+    50: '#e6f6f0',
+    100: '#c3e9da',
+    200: '#9fdcc4',
+    300: '#7bcfae',
+    400: '#57c298',
     500: '#10b981',
-    700: '#047857',
+    600: '#0ea874',
+    700: '#0c9767',
+    800: '#0a865a',
+    900: '#08754d',
   },
   error: {
-    50: '#fef2f2',
+    50: '#feebea',
+    100: '#fcc7c3',
+    200: '#faa49d',
+    300: '#f78076',
+    400: '#f55c50',
     500: '#ef4444',
-    700: '#b91c1c',
+    600: '#da3d3d',
+    700: '#c43737',
+    800: '#af3030',
+    900: '#9a2a2a',
   },
   warning: {
-    50: '#fffbeb',
+    50: '#fff7e6',
+    100: '#ffebb3',
+    200: '#ffdf80',
+    300: '#ffd24d',
+    400: '#ffc61a',
     500: '#f59e0b',
-    700: '#b45309',
+    600: '#df8e0a',
+    700: '#c67f09',
+    800: '#ae6f08',
+    900: '#966007',
   },
   info: {
-    50: '#eff6ff',
+    50: '#e6f3ff',
+    100: '#b3ddff',
+    200: '#80c7ff',
+    300: '#4db0ff',
+    400: '#1a9aff',
     500: '#3b82f6',
-    700: '#1d4ed8',
+    600: '#1a75e0',
+    700: '#1768c7',
+    800: '#155bae',
+    900: '#124e95',
+  },
+  gray: {
+    50: '#f9fafb',
+    100: '#f3f4f6',
+    200: '#e5e7eb',
+    300: '#d1d5db',
+    400: '#9ca3af',
+    500: '#6b7280',
+    600: '#4b5563',
+    700: '#374151',
+    800: '#1f2937',
+    900: '#111827',
   },
 };
 
 // Typography
 const fonts = {
-  heading: "'Inter', system-ui, sans-serif",
-  body: "'Inter', system-ui, sans-serif",
+  heading: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
+  body: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
+};
+
+// Shadows
+const shadows = {
+  xs: '0 1px 2px rgba(16, 24, 40, 0.05)',
+  sm: '0 1px 3px rgba(16, 24, 40, 0.1), 0 1px 2px rgba(16, 24, 40, 0.06)',
+  md: '0 4px 6px -1px rgba(16, 24, 40, 0.1), 0 2px 4px -1px rgba(16, 24, 40, 0.06)',
+  lg: '0 10px 15px -3px rgba(16, 24, 40, 0.1), 0 4px 6px -2px rgba(16, 24, 40, 0.05)',
+  xl: '0 20px 25px -5px rgba(16, 24, 40, 0.1), 0 10px 10px -5px rgba(16, 24, 40, 0.04)',
+  '2xl': '0 25px 50px -12px rgba(16, 24, 40, 0.25)',
+  card: '0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08)',
+  dropdown: '0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08)',
 };
 
 // Component style overrides
@@ -61,6 +113,22 @@ const components = {
     baseStyle: {
       fontWeight: 500,
       borderRadius: 'md',
+      _focus: {
+        boxShadow: 'outline',
+      },
+      _hover: {
+        transform: 'translateY(-1px)',
+        boxShadow: 'md',
+        _disabled: {
+          transform: 'none',
+          boxShadow: 'none',
+        },
+      },
+      _active: {
+        transform: 'translateY(0)',
+        boxShadow: 'sm',
+      },
+      transition: 'all 0.2s',
     },
     variants: {
       primary: {
@@ -101,6 +169,17 @@ const components = {
         },
         _active: { bg: 'gray.200' },
       },
+      accent: {
+        bg: 'accent.500',
+        color: 'white',
+        _hover: {
+          bg: 'accent.600',
+          _disabled: {
+            bg: 'accent.500',
+          },
+        },
+        _active: { bg: 'accent.700' },
+      },
     },
     defaultProps: {
       variant: 'primary',
@@ -111,9 +190,14 @@ const components = {
     baseStyle: {
       container: {
         bg: 'white',
-        borderRadius: 'lg',
-        boxShadow: 'sm',
+        borderRadius: 'xl',
+        boxShadow: 'card',
         overflow: 'hidden',
+        transition: 'all 0.2s ease-in-out',
+        _hover: {
+          boxShadow: 'lg',
+          transform: 'translateY(-2px)',
+        },
       },
       header: {
         p: 6,
@@ -139,7 +223,7 @@ const components = {
           borderRadius: 'md',
           borderWidth: '1px',
           borderColor: 'gray.300',
-          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+          boxShadow: 'xs',
           _placeholder: {
             color: 'gray.400',
           },
@@ -154,6 +238,21 @@ const components = {
             bg: 'gray.50',
             opacity: 0.7,
           },
+          transition: 'all 0.2s',
+        },
+      },
+      filled: {
+        field: {
+          bg: 'gray.100',
+          borderRadius: 'md',
+          _hover: {
+            bg: 'gray.200',
+          },
+          _focus: {
+            bg: 'white',
+            borderColor: 'brand.500',
+          },
+          transition: 'all 0.2s',
         },
       },
     },
@@ -169,7 +268,7 @@ const components = {
           borderRadius: 'md',
           borderWidth: '1px',
           borderColor: 'gray.300',
-          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+          boxShadow: 'xs',
           _hover: {
             borderColor: 'gray.400',
           },
@@ -181,6 +280,7 @@ const components = {
             bg: 'gray.50',
             opacity: 0.7,
           },
+          transition: 'all 0.2s',
         },
       },
     },
@@ -195,7 +295,7 @@ const components = {
         borderWidth: '1px',
         borderColor: 'gray.300',
         bg: 'white',
-        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+        boxShadow: 'xs',
         _hover: {
           borderColor: 'gray.400',
         },
@@ -207,6 +307,7 @@ const components = {
           bg: 'gray.50',
           opacity: 0.7,
         },
+        transition: 'all 0.2s',
       },
     },
     defaultProps: {
@@ -223,6 +324,7 @@ const components = {
         _hover: {
           borderColor: 'brand.500',
         },
+        transition: 'all 0.2s',
       },
     },
   },
@@ -249,6 +351,7 @@ const components = {
           tr: {
             _hover: {
               bg: 'gray.50',
+              transition: 'background-color 0.2s',
             },
           },
         },
@@ -259,35 +362,56 @@ const components = {
     baseStyle: {
       dialog: {
         borderRadius: 'md',
+        boxShadow: '2xl',
       },
     },
   },
   Modal: {
     baseStyle: {
       dialog: {
-        borderRadius: 'lg',
+        borderRadius: 'xl',
+        boxShadow: '2xl',
+      },
+      overlay: {
+        backdropFilter: 'blur(2px)',
       },
     },
   },
-  FormLabel: {
+  Badge: {
     baseStyle: {
+      textTransform: 'normal',
       fontWeight: 'medium',
-      color: 'gray.700',
-      mb: 1,
+      borderRadius: 'full',
+    },
+    variants: {
+      solid: {
+        bg: 'brand.500',
+        color: 'white',
+      },
+      subtle: {
+        bg: 'brand.100',
+        color: 'brand.800',
+      },
+      outline: {
+        borderColor: 'brand.500',
+        color: 'brand.500',
+      },
     },
   },
-  FormHelperText: {
-    baseStyle: {
-      color: 'gray.500',
-      fontSize: 'xs',
-      mt: 1,
-    },
-  },
-  FormErrorMessage: {
-    baseStyle: {
-      color: 'error.500',
-      fontSize: 'xs',
-      mt: 1,
+  Tabs: {
+    variants: {
+      line: {
+        tab: {
+          _selected: {
+            color: 'brand.500',
+            borderColor: 'brand.500',
+          },
+          _hover: {
+            color: 'brand.400',
+          },
+          transition: 'all 0.2s',
+        },
+      },
     },
   },
 };
@@ -299,6 +423,29 @@ const styles = {
       bg: 'gray.50',
       color: 'gray.800',
     },
+    '*::selection': {
+      bg: 'brand.100',
+    },
+    '.hover-scale': {
+      transition: 'transform 0.2s',
+      _hover: {
+        transform: 'scale(1.02)',
+      },
+    },
+    '.fade-in': {
+      animation: 'fadeIn 0.5s ease-in-out',
+    },
+    '@keyframes fadeIn': {
+      '0%': { opacity: 0 },
+      '100%': { opacity: 1 },
+    },
+    '.slide-up': {
+      animation: 'slideUp 0.3s ease-out',
+    },
+    '@keyframes slideUp': {
+      '0%': { transform: 'translateY(10px)', opacity: 0 },
+      '100%': { transform: 'translateY(0)', opacity: 1 },
+    },
   },
 };
 
@@ -306,27 +453,52 @@ const styles = {
 const layerStyles = {
   card: {
     bg: 'white',
+    borderRadius: 'xl',
+    boxShadow: 'card',
+    overflow: 'hidden',
+    transition: 'all 0.2s ease-in-out',
+    _hover: {
+      boxShadow: 'lg',
+      transform: 'translateY(-2px)',
+    },
+  },
+  cardCompact: {
+    bg: 'white',
     borderRadius: 'lg',
     boxShadow: 'sm',
-    overflow: 'hidden',
+    p: 4,
+  },
+  cardStatistic: {
+    bg: 'white',
+    borderRadius: 'lg',
+    boxShadow: 'sm',
+    p: 4,
+    border: '1px solid',
+    borderColor: 'gray.100',
   },
   sidebar: {
     bg: 'white',
     borderRight: '1px solid',
     borderColor: 'gray.100',
+    boxShadow: 'xs',
   },
   header: {
     bg: 'white',
     borderBottom: '1px solid',
     borderColor: 'gray.100',
     boxShadow: 'sm',
+    backdropFilter: 'blur(8px)',
+  },
+  headerGradient: {
+    bgGradient: 'linear(to-r, brand.600, brand.500)',
+    color: 'white',
   },
   formInput: {
     bg: 'white',
     borderWidth: '1px',
     borderColor: 'gray.300',
     borderRadius: 'md',
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+    boxShadow: 'xs',
     _hover: {
       borderColor: 'gray.400',
     },
@@ -334,11 +506,46 @@ const layerStyles = {
       borderColor: 'brand.500',
       boxShadow: '0 0 0 1px var(--chakra-colors-brand-500)',
     },
+    transition: 'all 0.2s',
+  },
+  glassmorphism: {
+    bg: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: 'xl',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
   },
 };
 
 // Custom text styles
 const textStyles = {
+  h1: {
+    fontSize: ['2xl', '3xl'],
+    fontWeight: 'bold',
+    lineHeight: '110%',
+    letterSpacing: '-0.01em',
+  },
+  h2: {
+    fontSize: ['xl', '2xl'],
+    fontWeight: 'semibold',
+    lineHeight: '110%',
+    letterSpacing: '-0.01em',
+  },
+  h3: {
+    fontSize: ['lg', 'xl'],
+    fontWeight: 'medium',
+    lineHeight: '110%',
+  },
+  h4: {
+    fontSize: ['md', 'lg'],
+    fontWeight: 'medium',
+    lineHeight: '110%',
+  },
+  subtitle: {
+    fontSize: 'md',
+    fontWeight: 'normal',
+    color: 'gray.600',
+    lineHeight: '140%',
+  },
   formLabel: {
     fontWeight: 'medium',
     fontSize: 'sm',
@@ -346,13 +553,24 @@ const textStyles = {
   },
 };
 
+// Custom breakpoints for better responsiveness
+const breakpoints = {
+  sm: '30em', // 480px
+  md: '48em', // 768px
+  lg: '62em', // 992px
+  xl: '80em', // 1280px
+  '2xl': '96em', // 1536px
+};
+
 const theme = extendTheme({
   colors,
   fonts,
+  shadows,
   components,
   styles,
   layerStyles,
   textStyles,
+  breakpoints,
 });
 
 export default theme;

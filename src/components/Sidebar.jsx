@@ -15,6 +15,10 @@ import {
   Badge,
   Image,
   Text,
+  Tooltip,
+  Divider,
+  Button,
+  useToken,
 } from '@chakra-ui/react';
 import {
   FiHome,
@@ -30,10 +34,14 @@ import {
   FiBarChart2,
   FiChevronDown,
   FiChevronRight,
+  FiSettings,
+  FiHelpCircle,
 } from 'react-icons/fi';
 
 // NavItem component for sidebar menu items
 const NavItem = ({ icon, children, isActive, hasSubmenu, isOpen, onToggle, ...rest }) => {
+  const [bgBrand50] = useToken('colors', ['brand.50']);
+  
   return (
     <Box my={1} mx={2}>
       <Flex
@@ -41,18 +49,34 @@ const NavItem = ({ icon, children, isActive, hasSubmenu, isOpen, onToggle, ...re
         px={4}
         py={3}
         cursor="pointer"
-        borderRadius="md"
+        borderRadius="xl"
         role="group"
         fontWeight={isActive ? "600" : "normal"}
         bg={isActive ? "brand.50" : "transparent"}
-        color={isActive ? "brand.500" : "gray.700"}
+        color={isActive ? "brand.600" : "gray.700"}
         _hover={{
           bg: 'gray.100',
+          transform: 'translateX(4px)',
         }}
         transition="all 0.2s"
         onClick={hasSubmenu ? onToggle : undefined}
+        position="relative"
+        boxShadow={isActive ? `0 4px 12px -4px ${bgBrand50}` : 'none'}
         {...rest}
       >
+        {isActive && (
+          <Box
+            position="absolute"
+            left="0"
+            top="50%"
+            transform="translateY(-50%)"
+            width="4px"
+            height="60%"
+            bg="brand.500"
+            borderRadius="full"
+          />
+        )}
+        
         {icon && (
           <Icon
             mr={3}
@@ -62,15 +86,17 @@ const NavItem = ({ icon, children, isActive, hasSubmenu, isOpen, onToggle, ...re
             _groupHover={{
               color: "brand.500",
             }}
+            transition="all 0.2s"
           />
         )}
-        <Box fontSize="sm">{children}</Box>
+        <Box fontSize="sm" flex="1">{children}</Box>
         {hasSubmenu && (
           <Icon
             as={isOpen ? FiChevronDown : FiChevronRight}
             ml="auto"
             fontSize="16px"
-            transition="all 0.2s"
+            transition="all 0.3s"
+            transform={isOpen ? "rotate(0deg)" : "rotate(0deg)"}
             color="gray.500"
           />
         )}
@@ -87,20 +113,34 @@ const SubNavItem = ({ children, isActive, ...rest }) => {
         align="center"
         pl={12}
         pr={4}
-        py={2}
-        borderRadius="md"
+        py={2.5}
+        borderRadius="lg"
         role="group"
         cursor="pointer"
         fontWeight={isActive ? "600" : "normal"}
         bg={isActive ? "brand.50" : "transparent"}
-        color={isActive ? "brand.500" : "gray.700"}
+        color={isActive ? "brand.600" : "gray.600"}
         _hover={{
           bg: 'gray.100',
           color: 'brand.500',
+          transform: 'translateX(4px)',
         }}
         transition="all 0.2s"
         fontSize="sm"
+        position="relative"
       >
+        {isActive && (
+          <Box
+            position="absolute"
+            left="6px"
+            top="50%"
+            transform="translateY(-50%)"
+            width="2px"
+            height="60%"
+            bg="brand.400"
+            borderRadius="full"
+          />
+        )}
         {children}
       </Flex>
     </Link>
@@ -197,16 +237,15 @@ const Sidebar = ({ isOpen, onClose, variant = "drawer" }) => {
   const SidebarContent = () => (
     <Box
       bg={useColorModeValue('white', 'gray.900')}
-      w="240px"
+      w="260px"
       pos="fixed"
       h="full"
       overflowY="auto"
       css={{
         '&::-webkit-scrollbar': {
-          width: '6px',
+          width: '4px',
         },
         '&::-webkit-scrollbar-track': {
-          width: '8px',
           background: 'transparent',
         },
         '&::-webkit-scrollbar-thumb': {
@@ -214,10 +253,13 @@ const Sidebar = ({ isOpen, onClose, variant = "drawer" }) => {
           borderRadius: '24px',
         },
       }}
+      boxShadow="md"
+      borderRight="1px"
+      borderColor="gray.100"
     >
       {/* Logo in Sidebar */}
       <Box 
-        bg="#3D5291"
+        bgGradient="linear(to-r, brand.600, brand.500)"
         h="64px" 
         w="100%"
         position="sticky"
@@ -229,12 +271,16 @@ const Sidebar = ({ isOpen, onClose, variant = "drawer" }) => {
           alignItems="center" 
           justifyContent="center"
         >
-          <Box>
+          <Box 
+            transition="transform 0.3s"
+            _hover={{ transform: "scale(1.05)" }}
+          >
             <Image 
               src="/logo.png" 
               alt="Samridhi Mart Logo" 
-              height="28px" 
+              height="34px" 
               objectFit="contain"
+              filter="brightness(1.2)"
             />
           </Box>
         </Flex>
@@ -242,54 +288,128 @@ const Sidebar = ({ isOpen, onClose, variant = "drawer" }) => {
 
       {/* Navigation Menu */}
       <Box pt={5} pb={8}>
+        <Text px={6} mb={2} fontSize="xs" fontWeight="medium" color="gray.500" textTransform="uppercase">
+          Main Menu
+        </Text>
+        
         {menuItems.map((item) => (
           <Box key={item.name}>
             {item.submenu ? (
               <>
-                <NavItem
-                  icon={item.icon}
-                  isActive={isActiveSubmenu(item.submenu.map(sub => sub.path))}
-                  hasSubmenu={true}
-                  isOpen={openSubmenus[item.submenuKey]}
-                  onToggle={() => toggleSubmenu(item.submenuKey)}
+                <Tooltip 
+                  label={item.name} 
+                  placement="right" 
+                  hasArrow 
+                  openDelay={500}
+                  display={{ base: 'none', md: 'block' }}
                 >
-                  {item.name}
-                </NavItem>
+                  <Box>
+                    <NavItem
+                      icon={item.icon}
+                      isActive={isActiveSubmenu(item.submenu.map(sub => sub.path))}
+                      hasSubmenu={true}
+                      isOpen={openSubmenus[item.submenuKey]}
+                      onToggle={() => toggleSubmenu(item.submenuKey)}
+                    >
+                      {item.name}
+                    </NavItem>
+                  </Box>
+                </Tooltip>
                 
                 <Collapse in={openSubmenus[item.submenuKey]} animateOpacity>
                   <Box mt={1} mb={2}>
                     {item.submenu.map((subItem) => (
-                      <SubNavItem
+                      <Tooltip 
                         key={subItem.path}
-                        to={subItem.path}
-                        isActive={isActiveRoute(subItem.path)}
+                        label={subItem.name} 
+                        placement="right" 
+                        hasArrow 
+                        openDelay={500}
+                        display={{ base: 'none', md: 'block' }}
                       >
-                        {subItem.name}
-                      </SubNavItem>
+                        <Box>
+                          <SubNavItem
+                            to={subItem.path}
+                            isActive={isActiveRoute(subItem.path)}
+                          >
+                            {subItem.name}
+                          </SubNavItem>
+                        </Box>
+                      </Tooltip>
                     ))}
                   </Box>
                 </Collapse>
               </>
             ) : (
-              <Link to={item.path} style={{ textDecoration: 'none' }}>
-                <NavItem 
-                  key={item.name}
-                  icon={item.icon}
-                  isActive={isActiveRoute(item.path)}
-                >
-                  <Flex align="center" justify="space-between" width="100%">
-                    <Box>{item.name}</Box>
-                    {item.badge && (
-                      <Badge colorScheme="red" borderRadius="full" fontSize="xs" px={2}>
-                        {item.badge}
-                      </Badge>
-                    )}
-                  </Flex>
-                </NavItem>
-              </Link>
+              <Tooltip 
+                label={item.name} 
+                placement="right" 
+                hasArrow 
+                openDelay={500}
+                display={{ base: 'none', md: 'block' }}
+              >
+                <Box>
+                  <Link to={item.path} style={{ textDecoration: 'none' }}>
+                    <NavItem 
+                      key={item.name}
+                      icon={item.icon}
+                      isActive={isActiveRoute(item.path)}
+                    >
+                      <Flex align="center" justify="space-between" width="100%">
+                        <Box>{item.name}</Box>
+                        {item.badge && (
+                          <Badge 
+                            colorScheme="red" 
+                            borderRadius="full" 
+                            fontSize="xs" 
+                            px={2}
+                            animation="pulse 2s infinite"
+                          >
+                            {item.badge}
+                          </Badge>
+                        )}
+                      </Flex>
+                    </NavItem>
+                  </Link>
+                </Box>
+              </Tooltip>
             )}
           </Box>
         ))}
+
+        <Divider my={4} borderColor="gray.200" />
+        
+        <Text px={6} mb={2} fontSize="xs" fontWeight="medium" color="gray.500" textTransform="uppercase">
+          Help & Settings
+        </Text>
+
+        <NavItem icon={FiSettings}>
+          Settings
+        </NavItem>
+        
+        <NavItem icon={FiHelpCircle}>
+          Help & Support
+        </NavItem>
+        
+        {/* System Status */}
+        <Box px={4} py={4} mt={10} mx={3} bg="gray.50" borderRadius="lg">
+          <Flex align="center" mb={2}>
+            <Box w="2" h="2" borderRadius="full" bg="green.400" mr={2}></Box>
+            <Text fontSize="xs" fontWeight="medium">System Status: Online</Text>
+          </Flex>
+          <Text fontSize="xs" color="gray.500">Last synced: Today, 10:24 AM</Text>
+          <Button 
+            size="sm"
+            mt={2}
+            w="full"
+            variant="outline"
+            colorScheme="brand"
+            fontSize="xs"
+            leftIcon={<Icon as={FiFileText} fontSize="xs" />}
+          >
+            View Report
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
@@ -307,7 +427,7 @@ const Sidebar = ({ isOpen, onClose, variant = "drawer" }) => {
         size="xs"
       >
         <DrawerOverlay />
-        <DrawerContent maxW="240px">
+        <DrawerContent maxW="260px">
           <DrawerCloseButton color="white" top="20px" right="8px" zIndex="overlay" />
           <DrawerBody p={0}>
             <SidebarContent />
@@ -320,11 +440,9 @@ const Sidebar = ({ isOpen, onClose, variant = "drawer" }) => {
   return (
     <Box
       display={{ base: 'none', md: 'block' }}
-      w="240px"
+      w="260px"
       pos="fixed"
       h="100vh"
-      borderRightWidth="1px"
-      borderColor={useColorModeValue('gray.200', 'gray.700')}
     >
       <SidebarContent />
     </Box>
