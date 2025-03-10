@@ -4,18 +4,17 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   Box,
   Flex,
-  Text,
   Icon,
   useColorModeValue,
   Collapse,
-  useDisclosure,
   Drawer,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  DrawerHeader,
   DrawerBody,
   Badge,
+  Image,
+  Text,
 } from '@chakra-ui/react';
 import {
   FiHome,
@@ -32,7 +31,6 @@ import {
   FiChevronDown,
   FiChevronRight,
 } from 'react-icons/fi';
-import { Logo } from './Logo';
 
 // NavItem component for sidebar menu items
 const NavItem = ({ icon, children, isActive, hasSubmenu, isOpen, onToggle, ...rest }) => {
@@ -66,7 +64,7 @@ const NavItem = ({ icon, children, isActive, hasSubmenu, isOpen, onToggle, ...re
             }}
           />
         )}
-        <Text fontSize="sm">{children}</Text>
+        <Box fontSize="sm">{children}</Box>
         {hasSubmenu && (
           <Icon
             as={isOpen ? FiChevronDown : FiChevronRight}
@@ -199,7 +197,7 @@ const Sidebar = ({ isOpen, onClose, variant = "drawer" }) => {
   const SidebarContent = () => (
     <Box
       bg={useColorModeValue('white', 'gray.900')}
-      w={{ base: "full", md: "64" }}
+      w="240px"
       pos="fixed"
       h="full"
       overflowY="auto"
@@ -218,12 +216,32 @@ const Sidebar = ({ isOpen, onClose, variant = "drawer" }) => {
       }}
     >
       {/* Logo in Sidebar */}
-      <Flex h="16" alignItems="center" justifyContent="center" my={2}>
-        <Logo size="md" />
-      </Flex>
+      <Box 
+        bg="#3D5291"
+        h="64px" 
+        w="100%"
+        position="sticky"
+        top="0"
+        zIndex="1"
+      >
+        <Flex 
+          h="100%" 
+          alignItems="center" 
+          justifyContent="center"
+        >
+          <Box>
+            <Image 
+              src="/logo.png" 
+              alt="Samridhi Mart Logo" 
+              height="28px" 
+              objectFit="contain"
+            />
+          </Box>
+        </Flex>
+      </Box>
 
       {/* Navigation Menu */}
-      <Box mt={6}>
+      <Box pt={5} pb={8}>
         {menuItems.map((item) => (
           <Box key={item.name}>
             {item.submenu ? (
@@ -260,7 +278,7 @@ const Sidebar = ({ isOpen, onClose, variant = "drawer" }) => {
                   isActive={isActiveRoute(item.path)}
                 >
                   <Flex align="center" justify="space-between" width="100%">
-                    <Text>{item.name}</Text>
+                    <Box>{item.name}</Box>
                     {item.badge && (
                       <Badge colorScheme="red" borderRadius="full" fontSize="xs" px={2}>
                         {item.badge}
@@ -289,11 +307,8 @@ const Sidebar = ({ isOpen, onClose, variant = "drawer" }) => {
         size="xs"
       >
         <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth="1px">
-            <Logo size="sm" />
-          </DrawerHeader>
+        <DrawerContent maxW="240px">
+          <DrawerCloseButton color="white" top="20px" right="8px" zIndex="overlay" />
           <DrawerBody p={0}>
             <SidebarContent />
           </DrawerBody>
@@ -305,9 +320,9 @@ const Sidebar = ({ isOpen, onClose, variant = "drawer" }) => {
   return (
     <Box
       display={{ base: 'none', md: 'block' }}
-      w={'64'}
+      w="240px"
       pos="fixed"
-      h="full"
+      h="100vh"
       borderRightWidth="1px"
       borderColor={useColorModeValue('gray.200', 'gray.700')}
     >

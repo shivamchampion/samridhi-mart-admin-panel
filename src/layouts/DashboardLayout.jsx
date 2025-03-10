@@ -1,40 +1,32 @@
 // src/layouts/DashboardLayout.jsx
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Box, useDisclosure, Flex, Container } from '@chakra-ui/react';
-import Header from '../components/Header';
+import { Box, Flex, useDisclosure, useColorModeValue } from '@chakra-ui/react';
 import Sidebar from '../components/Sidebar';
+import Header from '../components/Header';
 
 const DashboardLayout = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const mainContentRef = useRef();
+  const [isSidebarOpen] = useState(true); // State to track sidebar visibility for desktop
 
   return (
-    <Box minH="100vh" bg="gray.50">
-      {/* Static sidebar for desktop */}
-      <Sidebar
-        variant="static"
-        onClose={() => onClose}
+    <Box minH="100vh" bg={useColorModeValue('gray.50', 'gray.900')}>
+      <Sidebar 
+        onClose={onClose} 
+        isOpen={isOpen} 
+        variant="drawer" 
       />
-      
-      {/* Mobile drawer sidebar */}
       <Sidebar
-        isOpen={isOpen}
         onClose={onClose}
-        variant="drawer"
+        isOpen={true}
+        variant="sidebar"
       />
-      
-      {/* Main content area */}
-      <Box 
-        ml={{ base: 0, md: 64 }} 
-        transition="margin-left 0.3s"
-        ref={mainContentRef}
-      >
-        {/* Header */}
-        <Header onSidebarOpen={onOpen} />
-        
-        {/* Page Content */}
-        <Box as="main" p={4} maxW="1600px" mx="auto">
+      <Box ml={{ base: 0, md: '64' }}>
+        <Header 
+          onSidebarOpen={onOpen}
+          isSidebarOpen={isSidebarOpen}
+        />
+        <Box as="main" p={6}>
           <Outlet />
         </Box>
       </Box>

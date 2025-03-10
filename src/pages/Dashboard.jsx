@@ -50,60 +50,65 @@ import {
   FiMoreHorizontal,
 } from 'react-icons/fi';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-
-const StatCard = ({ title, value, icon, change, isPositive, isNegative, color, suffix }) => {
-  return (
-    <Card 
-      variant="outline"
-      boxShadow="sm"
-      borderRadius="lg"
-      borderColor={useColorModeValue('gray.200', 'gray.700')}
-      overflow="hidden"
-      transition="all 0.3s"
-      _hover={{ transform: 'translateY(-5px)', boxShadow: 'md' }}
-    >
-      <CardBody p={6}>
-        <Flex justifyContent="space-between">
-          <Box>
-            <Text fontSize="sm" color="gray.500" fontWeight="medium">{title}</Text>
-            <Flex mt={1} align="baseline">
-              <StatNumber fontSize="2xl" fontWeight="bold">
-                {value}
-              </StatNumber>
-              {suffix && <Text ml={1} fontSize="md" color="gray.500">{suffix}</Text>}
-            </Flex>
+// Fixed StatCard component for Dashboard.jsx
+const StatCard = ({ title, value, icon, change, isPositive, color, suffix }) => {
+    return (
+      <Card 
+        variant="outline"
+        boxShadow="sm"
+        borderRadius="lg"
+        borderColor={useColorModeValue('gray.200', 'gray.700')}
+        overflow="hidden"
+        transition="all 0.3s"
+        _hover={{ transform: 'translateY(-5px)', boxShadow: 'md' }}
+      >
+        <CardBody p={6}>
+          <Flex justifyContent="space-between">
+            <Box>
+              <Text fontSize="sm" color="gray.500" fontWeight="medium">{title}</Text>
+              <Flex mt={1} align="baseline">
+                <Stat>
+                  <StatNumber fontSize="2xl" fontWeight="bold">
+                    {value}
+                  </StatNumber>
+                </Stat>
+                {suffix && <Text ml={1} fontSize="md" color="gray.500">{suffix}</Text>}
+              </Flex>
+              
+              {change && (
+                <Stat>
+                  <StatHelpText mt={1}>
+                    <Flex align="center">
+                      <StatArrow type={isPositive ? 'increase' : 'decrease'} />
+                      <Text fontWeight="medium" color={isPositive ? 'green.500' : 'red.500'}>
+                        {change}
+                      </Text>
+                      <Text ml={1} color="gray.500" fontSize="sm">
+                        from last period
+                      </Text>
+                    </Flex>
+                  </StatHelpText>
+                </Stat>
+              )}
+            </Box>
             
-            {change && (
-              <StatHelpText mt={1}>
-                <Flex align="center">
-                  <StatArrow type={isPositive ? 'increase' : 'decrease'} />
-                  <Text fontWeight="medium" color={isPositive ? 'green.500' : 'red.500'}>
-                    {change}
-                  </Text>
-                  <Text ml={1} color="gray.500" fontSize="sm">
-                    from last period
-                  </Text>
-                </Flex>
-              </StatHelpText>
-            )}
-          </Box>
-          
-          <Flex 
-            align="center" 
-            justify="center" 
-            h={12} 
-            w={12} 
-            bg={`${color}.100`} 
-            color={`${color}.500`}
-            borderRadius="lg"
-          >
-            <Icon as={icon} boxSize={6} />
+            <Flex 
+              align="center" 
+              justify="center" 
+              h={12} 
+              w={12} 
+              bg={`${color}.100`} 
+              color={`${color}.500`}
+              borderRadius="lg"
+            >
+              <Icon as={icon} boxSize={6} />
+            </Flex>
           </Flex>
-        </Flex>
-      </CardBody>
-    </Card>
-  );
-};
+        </CardBody>
+      </Card>
+    );
+  };
+    
 
 // Sample data for charts
 const salesData = [

@@ -13,8 +13,6 @@ import {
   MenuItem,
   MenuDivider,
   useDisclosure,
-  useColorModeValue,
-  Stack,
   Avatar,
   Badge,
   InputGroup,
@@ -27,27 +25,19 @@ import {
   PopoverBody,
   PopoverHeader,
   PopoverFooter,
-  Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
+  Image,
 } from '@chakra-ui/react';
 import {
   HamburgerIcon,
-  CloseIcon,
-  ChevronDownIcon,
   BellIcon,
   SettingsIcon,
   SearchIcon,
+  ChevronDownIcon,
 } from '@chakra-ui/icons';
 import { FiLogOut, FiUser } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
-import { Logo } from './Logo';
 
-const Header = ({ onSidebarOpen }) => {
+const Header = ({ onSidebarOpen, isMobile }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { isOpen: isNotificationsOpen, onToggle: toggleNotifications, onClose: closeNotifications } = useDisclosure();
   const [notifications] = useState([
@@ -60,8 +50,6 @@ const Header = ({ onSidebarOpen }) => {
   const { logout } = useAuth();
   const notifBtnRef = useRef();
   const searchRef = useRef();
-  const btnRef = useRef();
-  const { isOpen: isDrawerOpen, onOpen: openDrawer, onClose: closeDrawer } = useDisclosure();
 
   const handleLogout = () => {
     logout();
@@ -70,44 +58,59 @@ const Header = ({ onSidebarOpen }) => {
 
   return (
     <Box
-      bg={useColorModeValue('white', 'gray.900')}
+      bg="#3D5291"
       px={4}
-      py={2}
-      borderBottom="1px"
-      borderColor={useColorModeValue('gray.200', 'gray.700')}
+      py={0}
       position="sticky"
       top="0"
       zIndex="sticky"
       boxShadow="sm"
+      color="white"
+      h="64px"
     >
-      <Flex h={16} alignItems="center" justifyContent="space-between">
-        <HStack spacing={8} alignItems="center">
+      <Flex h="full" alignItems="center" justifyContent="space-between">
+        <HStack spacing={4} alignItems="center">
+          {/* Menu Icon (mobile only) */}
           <IconButton
             size="md"
             icon={<HamburgerIcon />}
             aria-label="Open Menu"
             display={{ md: 'none' }}
             onClick={onSidebarOpen}
+            variant="ghost"
+            color="white"
+            _hover={{ bg: 'whiteAlpha.200' }}
           />
-          <Box display={{ base: 'none', md: 'flex' }}>
-            <Logo />
+          
+          {/* Logo - Only shown on mobile or when sidebar is closed */}
+          <Box display={{ base: 'flex', md: isMobile ? 'flex' : 'none' }}>
+            <Image 
+              src="/logo.png" 
+              alt="Samridhi Mart Logo" 
+              h="32px"
+              objectFit="contain" 
+            />
           </Box>
           
           {/* Desktop Search Bar */}
-          <InputGroup maxW="sm" display={{ base: 'none', md: 'flex' }}>
+          <InputGroup maxW="320px" display={{ base: 'none', md: 'flex' }} ml={4}>
             <InputLeftElement pointerEvents="none">
-              <SearchIcon color="gray.400" />
+              <SearchIcon color="whiteAlpha.700" />
             </InputLeftElement>
             <Input 
               placeholder="Search..." 
-              bg="gray.50"
+              bg="whiteAlpha.200"
+              color="white"
               borderRadius="md"
-              _focus={{ bg: 'white', borderColor: 'brand.500' }}
+              _placeholder={{ color: 'whiteAlpha.700' }}
+              _focus={{ bg: 'whiteAlpha.300', borderColor: 'white' }}
+              borderColor="whiteAlpha.300"
+              h="38px"
             />
           </InputGroup>
         </HStack>
 
-        <Flex alignItems="center">
+        <HStack spacing={2}>
           {/* Mobile Search Button */}
           <IconButton
             aria-label="Search"
@@ -115,9 +118,10 @@ const Header = ({ onSidebarOpen }) => {
             size="md"
             variant="ghost"
             display={{ base: 'flex', md: 'none' }}
-            mr={2}
             onClick={() => setIsSearchOpen(!isSearchOpen)}
             ref={searchRef}
+            color="white"
+            _hover={{ bg: 'whiteAlpha.200' }}
           />
           
           {/* Notifications */}
@@ -128,14 +132,16 @@ const Header = ({ onSidebarOpen }) => {
             closeOnBlur={true}
           >
             <PopoverTrigger>
-              <Box position="relative" ref={notifBtnRef}>
+              <Box position="relative">
                 <IconButton
                   aria-label="Notifications"
                   icon={<BellIcon />}
                   size="md"
                   variant="ghost"
                   onClick={toggleNotifications}
-                  mr={2}
+                  color="white"
+                  _hover={{ bg: 'whiteAlpha.200' }}
+                  ref={notifBtnRef}
                 />
                 <Badge
                   position="absolute"
@@ -156,9 +162,17 @@ const Header = ({ onSidebarOpen }) => {
                 Notifications
               </PopoverHeader>
               <PopoverBody p={0} overflowY="auto" maxH="300px">
-                <Stack spacing={0} divider={<MenuDivider />}>
+                <Box>
                   {notifications.map((notification) => (
-                    <Box key={notification.id} px={4} py={3} _hover={{ bg: 'gray.50' }} cursor="pointer">
+                    <Box 
+                      key={notification.id} 
+                      px={4} 
+                      py={3} 
+                      _hover={{ bg: 'gray.50' }} 
+                      cursor="pointer"
+                      borderBottomWidth="1px"
+                      borderBottomColor="gray.100"
+                    >
                       <Text fontWeight="medium" fontSize="sm">
                         {notification.title}
                       </Text>
@@ -170,7 +184,7 @@ const Header = ({ onSidebarOpen }) => {
                       </Text>
                     </Box>
                   ))}
-                </Stack>
+                </Box>
               </PopoverBody>
               <PopoverFooter borderTopWidth="1px" p={2}>
                 <Button variant="link" size="sm" colorScheme="brand" width="full">
@@ -188,29 +202,30 @@ const Header = ({ onSidebarOpen }) => {
               variant="ghost"
               cursor="pointer"
               minW={0}
-              _hover={{ bg: 'gray.50' }}
-              rightIcon={<ChevronDownIcon />}
+              _hover={{ bg: 'whiteAlpha.200' }}
+              ml={2}
             >
-              <HStack>
+              <HStack spacing={2}>
                 <Avatar
                   size="sm"
-                  name="Admin User"
-                  bg="brand.500"
-                  color="white"
+                  name="AU"
+                  bg="white"
+                  color="#3D5291"
                 />
-                <Box display={{ base: 'none', md: 'block' }}>
-                  <Text fontSize="sm" fontWeight="medium">Admin User</Text>
-                </Box>
+                <Flex direction="column" display={{ base: 'none', md: 'flex' }} alignItems="flex-start">
+                  <Text fontSize="sm" fontWeight="medium" color="white" lineHeight="tight">Admin User</Text>
+                </Flex>
+                <ChevronDownIcon color="white" boxSize={4} />
               </HStack>
             </MenuButton>
-            <MenuList>
+            <MenuList color="gray.800">
               <MenuItem icon={<FiUser />}>My Profile</MenuItem>
               <MenuItem icon={<SettingsIcon />}>Settings</MenuItem>
               <MenuDivider />
               <MenuItem icon={<FiLogOut />} onClick={handleLogout}>Logout</MenuItem>
             </MenuList>
           </Menu>
-        </Flex>
+        </HStack>
       </Flex>
 
       {/* Mobile Search Bar */}
@@ -218,39 +233,20 @@ const Header = ({ onSidebarOpen }) => {
         <Box pb={4} display={{ md: 'none' }}>
           <InputGroup>
             <InputLeftElement pointerEvents="none">
-              <SearchIcon color="gray.400" />
+              <SearchIcon color="whiteAlpha.700" />
             </InputLeftElement>
             <Input 
               placeholder="Search..." 
-              bg="gray.50"
+              bg="whiteAlpha.200"
+              color="white"
+              _placeholder={{ color: 'whiteAlpha.700' }}
               autoFocus
               onBlur={() => setIsSearchOpen(false)}
+              borderColor="whiteAlpha.300"
             />
           </InputGroup>
         </Box>
       )}
-
-      {/* Mobile Menu Drawer */}
-      <Drawer
-        isOpen={isDrawerOpen}
-        placement="left"
-        onClose={closeDrawer}
-        finalFocusRef={btnRef}
-      >
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Menu</DrawerHeader>
-          <DrawerBody>
-            {/* Mobile menu content would go here */}
-          </DrawerBody>
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={closeDrawer}>
-              Close
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
     </Box>
   );
 };
