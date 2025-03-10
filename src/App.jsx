@@ -43,11 +43,14 @@ function AppRoutes() {
     <Routes>
       <Route path="/login" element={<Login />} />
       
-      <Route path="/" element={
-        <ProtectedRoute isAuthenticated={isAuthenticated}>
-          <DashboardLayout />
-        </ProtectedRoute>
-      }>
+      {/* Protected Routes */}
+      <Route 
+        path="/" 
+        element={
+          isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" replace />
+        }
+      >
+        {/* Dashboard Routes */}
         <Route index element={<Dashboard />} />
         <Route path="products" element={<Products />} />
         <Route path="categories" element={<Categories />} />
@@ -62,16 +65,10 @@ function AppRoutes() {
         <Route path="reports" element={<Reports />} />
       </Route>
       
+      {/* 404 Route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
-
-const ProtectedRoute = ({ isAuthenticated, children }) => {
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
-};
 
 export default App;

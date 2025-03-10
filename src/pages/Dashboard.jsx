@@ -3,7 +3,7 @@ import { useState } from 'react';
 import {
     ShoppingBag, Package, Users, TrendingUp,
     ArrowUpRight, ArrowDownRight, Calendar,
-    BarChart, Map
+    BarChart, Map, Tag, Briefcase
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
