@@ -1,33 +1,161 @@
 // src/components/Sidebar.jsx
+import { useRef, useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { 
-  Home, Package, Tag, Briefcase, FileText, Map, 
-  MapPin, Users, User, ShoppingBag, BarChart2, 
-  Menu, X, ChevronDown, ChevronRight 
-} from 'lucide-react';
-import { useState } from 'react';
+import {
+  Box,
+  Flex,
+  Text,
+  Icon,
+  useColorModeValue,
+  Collapse,
+  useDisclosure,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerBody,
+  Badge,
+} from '@chakra-ui/react';
+import {
+  FiHome,
+  FiBox,
+  FiTag,
+  FiShoppingBag,
+  FiBriefcase,
+  FiFileText,
+  FiMap,
+  FiMapPin,
+  FiUsers,
+  FiUser,
+  FiBarChart2,
+  FiChevronDown,
+  FiChevronRight,
+} from 'react-icons/fi';
+import { Logo } from './Logo';
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen, className = '' }) => {
+// NavItem component for sidebar menu items
+const NavItem = ({ icon, children, isActive, hasSubmenu, isOpen, onToggle, ...rest }) => {
+  return (
+    <Box my={1} mx={2}>
+      <Flex
+        align="center"
+        px={4}
+        py={3}
+        cursor="pointer"
+        borderRadius="md"
+        role="group"
+        fontWeight={isActive ? "600" : "normal"}
+        bg={isActive ? "brand.50" : "transparent"}
+        color={isActive ? "brand.500" : "gray.700"}
+        _hover={{
+          bg: 'gray.100',
+        }}
+        transition="all 0.2s"
+        onClick={hasSubmenu ? onToggle : undefined}
+        {...rest}
+      >
+        {icon && (
+          <Icon
+            mr={3}
+            fontSize="18px"
+            as={icon}
+            color={isActive ? "brand.500" : "gray.500"}
+            _groupHover={{
+              color: "brand.500",
+            }}
+          />
+        )}
+        <Text fontSize="sm">{children}</Text>
+        {hasSubmenu && (
+          <Icon
+            as={isOpen ? FiChevronDown : FiChevronRight}
+            ml="auto"
+            fontSize="16px"
+            transition="all 0.2s"
+            color="gray.500"
+          />
+        )}
+      </Flex>
+    </Box>
+  );
+};
+
+// SubNavItem component for submenu items
+const SubNavItem = ({ children, isActive, ...rest }) => {
+  return (
+    <Link style={{ textDecoration: 'none' }} {...rest}>
+      <Flex
+        align="center"
+        pl={12}
+        pr={4}
+        py={2}
+        borderRadius="md"
+        role="group"
+        cursor="pointer"
+        fontWeight={isActive ? "600" : "normal"}
+        bg={isActive ? "brand.50" : "transparent"}
+        color={isActive ? "brand.500" : "gray.700"}
+        _hover={{
+          bg: 'gray.100',
+          color: 'brand.500',
+        }}
+        transition="all 0.2s"
+        fontSize="sm"
+      >
+        {children}
+      </Flex>
+    </Link>
+  );
+};
+
+// Sidebar component
+const Sidebar = ({ isOpen, onClose, variant = "drawer" }) => {
   const location = useLocation();
-  const [openSubmenu, setOpenSubmenu] = useState(null);
+  
+  // Set up state for tracking opened submenus
+  const [openSubmenus, setOpenSubmenus] = useState({
+    inventory: false,
+    distribution: false,
+    users: false,
+  });
 
+  // Check active route
+  const isActiveRoute = (path) => location.pathname === path;
+  const isActiveSubmenu = (paths) => paths.some(path => location.pathname === path);
+
+  // Toggle submenu open/closed
   const toggleSubmenu = (menu) => {
-    setOpenSubmenu(openSubmenu === menu ? null : menu);
+    setOpenSubmenus(prev => ({
+      ...prev,
+      [menu]: !prev[menu]
+    }));
   };
 
-  const isActive = (path) => location.pathname === path;
-  
-  const isSubActive = (paths) => paths.some(path => location.pathname === path);
+  // Effect to open submenu of active item
+  useEffect(() => {
+    if (isActiveSubmenu(['/products', '/categories', '/brands', '/purchase-bills'])) {
+      setOpenSubmenus(prev => ({ ...prev, inventory: true }));
+    }
+    if (isActiveSubmenu(['/zones', '/beats'])) {
+      setOpenSubmenus(prev => ({ ...prev, distribution: true }));
+    }
+    if (isActiveSubmenu(['/distributors', '/salesmen', '/retailers'])) {
+      setOpenSubmenus(prev => ({ ...prev, users: true }));
+    }
+  }, [location.pathname]);
 
+  // Define menu items
   const menuItems = [
     { 
       name: 'Dashboard', 
       path: '/', 
-      icon: <Home size={20} /> 
+      icon: FiHome,
     },
     { 
-      name: 'Inventory', 
-      icon: <Package size={20} />,
+      name: 'Inventory',
+      icon: FiBox,
+      submenuKey: 'inventory',
       submenu: [
         { name: 'Products', path: '/products' },
         { name: 'Categories', path: '/categories' },
@@ -36,16 +164,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, className = '' }) => {
       ]
     },
     { 
-      name: 'Distribution', 
-      icon: <Map size={20} />,
+      name: 'Distribution',
+      icon: FiMap,
+      submenuKey: 'distribution',
       submenu: [
         { name: 'Zones', path: '/zones' },
         { name: 'Beats', path: '/beats' },
       ]
     },
     { 
-      name: 'Users', 
-      icon: <Users size={20} />,
+      name: 'Users',
+      icon: FiUsers,
+      submenuKey: 'users',
       submenu: [
         { name: 'Distributors', path: '/distributors' },
         { name: 'Salesmen', path: '/salesmen' },
@@ -55,85 +185,134 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, className = '' }) => {
     { 
       name: 'Orders', 
       path: '/orders', 
-      icon: <ShoppingBag size={20} /> 
+      icon: FiShoppingBag,
+      badge: '12',
     },
     { 
       name: 'Reports', 
       path: '/reports', 
-      icon: <BarChart2 size={20} /> 
+      icon: FiBarChart2,
     },
   ];
 
-  return (
-    <aside className={`bg-white border-r ${className}`}>
-      {/* Sidebar Header */}
-      <div className="h-16 flex items-center justify-between px-4 bg-[#3d5291] text-white">
-        <Link to="/" className="flex items-center space-x-2">
-          <span className="text-xl font-semibold">Samridhi Mart</span>
-        </Link>
-        <button
-          onClick={() => setSidebarOpen(false)}
-          className="md:hidden focus:outline-none"
-        >
-          <X size={24} />
-        </button>
-      </div>
+  // Sidebar contents
+  const SidebarContent = () => (
+    <Box
+      bg={useColorModeValue('white', 'gray.900')}
+      w={{ base: "full", md: "64" }}
+      pos="fixed"
+      h="full"
+      overflowY="auto"
+      css={{
+        '&::-webkit-scrollbar': {
+          width: '6px',
+        },
+        '&::-webkit-scrollbar-track': {
+          width: '8px',
+          background: 'transparent',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: 'rgba(0, 0, 0, 0.1)',
+          borderRadius: '24px',
+        },
+      }}
+    >
+      {/* Logo in Sidebar */}
+      <Flex h="16" alignItems="center" justifyContent="center" my={2}>
+        <Logo size="md" />
+      </Flex>
 
-      {/* Sidebar Content */}
-      <nav className="mt-4 px-2 space-y-1 overflow-y-auto h-[calc(100vh-64px)] pb-20">
-        {menuItems.map((item, index) => (
-          <div key={index}>
+      {/* Navigation Menu */}
+      <Box mt={6}>
+        {menuItems.map((item) => (
+          <Box key={item.name}>
             {item.submenu ? (
-              <div className="mb-1">
-                <button
-                  onClick={() => toggleSubmenu(item.name)}
-                  className={`w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium rounded-md transition-colors
-                  ${isSubActive(item.submenu.map(sub => sub.path)) 
-                    ? 'bg-indigo-50 text-[#3d5291]' 
-                    : 'text-gray-700 hover:bg-gray-100'}`}
+              <>
+                <NavItem
+                  icon={item.icon}
+                  isActive={isActiveSubmenu(item.submenu.map(sub => sub.path))}
+                  hasSubmenu={true}
+                  isOpen={openSubmenus[item.submenuKey]}
+                  onToggle={() => toggleSubmenu(item.submenuKey)}
                 >
-                  <div className="flex items-center">
-                    <span className="mr-3">{item.icon}</span>
-                    {item.name}
-                  </div>
-                  {openSubmenu === item.name ? (
-                    <ChevronDown size={16} />
-                  ) : (
-                    <ChevronRight size={16} />
-                  )}
-                </button>
+                  {item.name}
+                </NavItem>
                 
-                <div className={`mt-1 space-y-1 ${openSubmenu === item.name ? 'block' : 'hidden'}`}>
-                  {item.submenu.map((subItem, subIndex) => (
-                    <Link
-                      key={subIndex}
-                      to={subItem.path}
-                      className={`pl-12 pr-4 py-2 flex items-center text-sm font-medium rounded-md
-                      ${isActive(subItem.path) 
-                        ? 'bg-indigo-50 text-[#3d5291]' 
-                        : 'text-gray-600 hover:bg-gray-100'}`}
-                    >
-                      {subItem.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
+                <Collapse in={openSubmenus[item.submenuKey]} animateOpacity>
+                  <Box mt={1} mb={2}>
+                    {item.submenu.map((subItem) => (
+                      <SubNavItem
+                        key={subItem.path}
+                        to={subItem.path}
+                        isActive={isActiveRoute(subItem.path)}
+                      >
+                        {subItem.name}
+                      </SubNavItem>
+                    ))}
+                  </Box>
+                </Collapse>
+              </>
             ) : (
-              <Link
-                to={item.path}
-                className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-md transition-colors
-                ${isActive(item.path) 
-                  ? 'bg-indigo-50 text-[#3d5291]' 
-                  : 'text-gray-700 hover:bg-gray-100'}`}
-              >
-                <span className="mr-3">{item.icon}</span>
-                {item.name}
+              <Link to={item.path} style={{ textDecoration: 'none' }}>
+                <NavItem 
+                  key={item.name}
+                  icon={item.icon}
+                  isActive={isActiveRoute(item.path)}
+                >
+                  <Flex align="center" justify="space-between" width="100%">
+                    <Text>{item.name}</Text>
+                    {item.badge && (
+                      <Badge colorScheme="red" borderRadius="full" fontSize="xs" px={2}>
+                        {item.badge}
+                      </Badge>
+                    )}
+                  </Flex>
+                </NavItem>
               </Link>
             )}
-          </div>
+          </Box>
         ))}
-      </nav>
-    </aside>
+      </Box>
+    </Box>
+  );
+
+  // Return as drawer on mobile, or static sidebar on desktop
+  if (variant === "drawer") {
+    return (
+      <Drawer
+        autoFocus={false}
+        isOpen={isOpen}
+        placement="left"
+        onClose={onClose}
+        returnFocusOnClose={false}
+        onOverlayClick={onClose}
+        size="xs"
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader borderBottomWidth="1px">
+            <Logo size="sm" />
+          </DrawerHeader>
+          <DrawerBody p={0}>
+            <SidebarContent />
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  return (
+    <Box
+      display={{ base: 'none', md: 'block' }}
+      w={'64'}
+      pos="fixed"
+      h="full"
+      borderRightWidth="1px"
+      borderColor={useColorModeValue('gray.200', 'gray.700')}
+    >
+      <SidebarContent />
+    </Box>
   );
 };
 

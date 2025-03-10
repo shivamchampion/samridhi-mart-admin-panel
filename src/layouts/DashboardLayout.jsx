@@ -1,53 +1,44 @@
 // src/layouts/DashboardLayout.jsx
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
+import { Box, useDisclosure, Flex, Container } from '@chakra-ui/react';
 import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
 
 const DashboardLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const mainContentRef = useRef();
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
-      <Sidebar 
-        sidebarOpen={sidebarOpen} 
-        setSidebarOpen={setSidebarOpen} 
-        className={`
-          fixed md:static 
-          top-0 left-0 z-40 
-          w-64 
-          h-full 
-          transform 
-          transition-transform 
-          duration-300 
-          ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-          md:translate-x-0
-        `}
+    <Box minH="100vh" bg="gray.50">
+      {/* Static sidebar for desktop */}
+      <Sidebar
+        variant="static"
+        onClose={() => onClose}
       />
-
-      {/* Main Content Area */}
-      <div className="flex flex-col flex-1 overflow-hidden">
-        <Header 
-          sidebarOpen={sidebarOpen} 
-          setSidebarOpen={setSidebarOpen} 
-        />
+      
+      {/* Mobile drawer sidebar */}
+      <Sidebar
+        isOpen={isOpen}
+        onClose={onClose}
+        variant="drawer"
+      />
+      
+      {/* Main content area */}
+      <Box 
+        ml={{ base: 0, md: 64 }} 
+        transition="margin-left 0.3s"
+        ref={mainContentRef}
+      >
+        {/* Header */}
+        <Header onSidebarOpen={onOpen} />
         
-        {/* Mobile Sidebar Backdrop */}
-        {sidebarOpen && (
-          <div 
-            className="fixed inset-0 z-30 bg-black bg-opacity-50 md:hidden" 
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-        
-        {/* Main Content with Padding */}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50 p-4 md:p-6">
+        {/* Page Content */}
+        <Box as="main" p={4} maxW="1600px" mx="auto">
           <Outlet />
-        </main>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

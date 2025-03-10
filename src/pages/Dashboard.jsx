@@ -1,334 +1,565 @@
 // src/pages/Dashboard.jsx
 import { useState } from 'react';
-import {
-    ShoppingBag, Package, Users, TrendingUp,
-    ArrowUpRight, ArrowDownRight, Calendar,
-    BarChart, Map, Tag, Briefcase
-} from 'lucide-react';
 import { Link } from 'react-router-dom';
+import {
+  Box,
+  Flex,
+  SimpleGrid,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatArrow,
+  Text,
+  Heading,
+  Icon,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Badge,
+  Button,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Divider,
+  HStack,
+  VStack,
+  Progress,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import {
+  FiShoppingBag,
+  FiPackage,
+  FiUsers,
+  FiTrendingUp,
+  FiCalendar,
+  FiBarChart,
+  FiMap,
+  FiTag,
+  FiBriefcase,
+  FiExternalLink,
+  FiMoreHorizontal,
+} from 'react-icons/fi';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+
+const StatCard = ({ title, value, icon, change, isPositive, isNegative, color, suffix }) => {
+  return (
+    <Card 
+      variant="outline"
+      boxShadow="sm"
+      borderRadius="lg"
+      borderColor={useColorModeValue('gray.200', 'gray.700')}
+      overflow="hidden"
+      transition="all 0.3s"
+      _hover={{ transform: 'translateY(-5px)', boxShadow: 'md' }}
+    >
+      <CardBody p={6}>
+        <Flex justifyContent="space-between">
+          <Box>
+            <Text fontSize="sm" color="gray.500" fontWeight="medium">{title}</Text>
+            <Flex mt={1} align="baseline">
+              <StatNumber fontSize="2xl" fontWeight="bold">
+                {value}
+              </StatNumber>
+              {suffix && <Text ml={1} fontSize="md" color="gray.500">{suffix}</Text>}
+            </Flex>
+            
+            {change && (
+              <StatHelpText mt={1}>
+                <Flex align="center">
+                  <StatArrow type={isPositive ? 'increase' : 'decrease'} />
+                  <Text fontWeight="medium" color={isPositive ? 'green.500' : 'red.500'}>
+                    {change}
+                  </Text>
+                  <Text ml={1} color="gray.500" fontSize="sm">
+                    from last period
+                  </Text>
+                </Flex>
+              </StatHelpText>
+            )}
+          </Box>
+          
+          <Flex 
+            align="center" 
+            justify="center" 
+            h={12} 
+            w={12} 
+            bg={`${color}.100`} 
+            color={`${color}.500`}
+            borderRadius="lg"
+          >
+            <Icon as={icon} boxSize={6} />
+          </Flex>
+        </Flex>
+      </CardBody>
+    </Card>
+  );
+};
+
+// Sample data for charts
+const salesData = [
+  { name: 'Jan', current: 4000, previous: 3000 },
+  { name: 'Feb', current: 3000, previous: 2800 },
+  { name: 'Mar', current: 5000, previous: 4000 },
+  { name: 'Apr', current: 2780, previous: 3000 },
+  { name: 'May', current: 4890, previous: 3200 },
+  { name: 'Jun', current: 3390, previous: 2800 },
+  { name: 'Jul', current: 4490, previous: 3800 },
+];
+
+const categoryData = [
+  { name: 'Category 1', value: 35 },
+  { name: 'Category 2', value: 25 },
+  { name: 'Category 3', value: 20 },
+  { name: 'Category 4', value: 15 },
+  { name: 'Category 5', value: 5 },
+];
+
+const COLORS = ['#3D5291', '#5470C6', '#91CC75', '#FFD666', '#FD7E52'];
 
 const Dashboard = () => {
-    // Mock data - would be fetched from API in real implementation
-    const [timeRange, setTimeRange] = useState('weekly');
+  const [timeRange, setTimeRange] = useState('weekly');
+  const cardBg = useColorModeValue('white', 'gray.700');
+  
+  // Mock data - would be fetched from API in real implementation
+  const stats = [
+    {
+      title: 'Total Orders',
+      value: '512',
+      change: '12%',
+      isPositive: true,
+      icon: FiShoppingBag,
+      color: 'blue'
+    },
+    {
+      title: 'Products',
+      value: '128',
+      change: '8%',
+      isPositive: true,
+      icon: FiPackage,
+      color: 'green'
+    },
+    {
+      title: 'Retailers',
+      value: '432',
+      change: '15%',
+      isPositive: true,
+      icon: FiUsers,
+      color: 'purple'
+    },
+    {
+      title: 'Categories',
+      value: '5',
+      change: '1',
+      isPositive: true,
+      icon: FiTag,
+      color: 'brand'
+    },
+    {
+      title: 'Brands',
+      value: '5',
+      change: '2',
+      isPositive: true,
+      icon: FiBriefcase,
+      color: 'pink'
+    },
+    {
+      title: 'Total Revenue',
+      value: '₹1,24,500',
+      change: '9%',
+      isPositive: true,
+      icon: FiTrendingUp,
+      color: 'orange'
+    }
+  ];
 
-    const stats = [
-        {
-            title: 'Total Orders',
-            value: '512',
-            change: '+12%',
-            isPositive: true,
-            icon: <ShoppingBag />,
-            color: 'bg-blue-500'
-        },
-        {
-            title: 'Products',
-            value: '128',
-            change: '+8%',
-            isPositive: true,
-            icon: <Package />,
-            color: 'bg-green-500'
-        },
-        {
-            title: 'Retailers',
-            value: '432',
-            change: '+15%',
-            isPositive: true,
-            icon: <Users />,
-            color: 'bg-purple-500'
-        },
-        {
-            title: 'Categories',
-            value: '5',
-            change: '+1',
-            isPositive: true,
-            icon: <Tag />,
-            color: 'bg-purple-500'
-        },
-        {
-            title: 'Brands',
-            value: '5',
-            change: '+2',
-            isPositive: true,
-            icon: <Briefcase />,
-            color: 'bg-pink-500'
-        },
-        {
-            title: 'Total Revenue',
-            value: '₹1,24,500',
-            change: '+9%',
-            isPositive: true,
-            icon: <TrendingUp />,
-            color: 'bg-orange-500'
-        }
-    ];
+  const recentOrders = [
+    { id: 'ORD-001', retailer: 'Shop 1', date: '2023-03-08', status: 'DELIVERED', amount: '₹2,500' },
+    { id: 'ORD-002', retailer: 'Shop 2', date: '2023-03-07', status: 'PENDING', amount: '₹1,850' },
+    { id: 'ORD-003', retailer: 'Shop 3', date: '2023-03-07', status: 'CONFIRMED', amount: '₹3,200' },
+    { id: 'ORD-004', retailer: 'Shop 4', date: '2023-03-06', status: 'DELIVERED', amount: '₹1,400' },
+    { id: 'ORD-005', retailer: 'Shop 5', date: '2023-03-06', status: 'CREATED', amount: '₹2,100' },
+  ];
 
-    const recentOrders = [
-        { id: 'ORD-001', retailer: 'Shop 1', date: '2023-03-08', status: 'DELIVERED', amount: '₹2,500' },
-        { id: 'ORD-002', retailer: 'Shop 2', date: '2023-03-07', status: 'PENDING', amount: '₹1,850' },
-        { id: 'ORD-003', retailer: 'Shop 3', date: '2023-03-07', status: 'CONFIRMED', amount: '₹3,200' },
-        { id: 'ORD-004', retailer: 'Shop 4', date: '2023-03-06', status: 'DELIVERED', amount: '₹1,400' },
-        { id: 'ORD-005', retailer: 'Shop 5', date: '2023-03-06', status: 'CREATED', amount: '₹2,100' },
-    ];
+  const topProducts = [
+    { name: 'Product A', category: 'Category 1', sold: 145 },
+    { name: 'Product B', category: 'Category 2', sold: 132 },
+    { name: 'Product C', category: 'Category 1', sold: 121 },
+    { name: 'Product D', category: 'Category 3', sold: 98 },
+  ];
 
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'DELIVERED': return 'bg-green-100 text-green-800';
-            case 'PENDING': return 'bg-yellow-100 text-yellow-800';
-            case 'CONFIRMED': return 'bg-blue-100 text-blue-800';
-            case 'CREATED': return 'bg-gray-100 text-gray-800';
-            default: return 'bg-gray-100 text-gray-800';
-        }
-    };
+  const zoneData = [
+    { name: 'North Zone', beats: 7, retailers: 84, color: 'blue.500' },
+    { name: 'South Zone', beats: 7, retailers: 56, color: 'green.500' },
+    { name: 'East Zone', beats: 7, retailers: 63, color: 'yellow.500' },
+    { name: 'West Zone', beats: 7, retailers: 72, color: 'purple.500' },
+  ];
 
-    return (
-        <div className="space-y-6">
-            {/* Page Header */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-                <div className="mt-4 md:mt-0 flex items-center space-x-3">
-                    <button
-                        className={`px-4 py-2 text-sm rounded-md ${timeRange === 'daily' ? 'bg-[#3d5291] text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
-                        onClick={() => setTimeRange('daily')}
+  const beatSchedule = [
+    { name: 'Beat 1 - Larkui', salesman: 'John Doe', retailers: 12, status: 'In Progress', completion: 60 },
+    { name: 'Beat 2 - Central', salesman: 'Jane Smith', retailers: 8, status: 'Pending', completion: 0 },
+    { name: 'Beat 3 - Market', salesman: 'Robert Johnson', retailers: 15, status: 'Completed', completion: 100 },
+  ];
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'DELIVERED': return 'green';
+      case 'PENDING': return 'yellow';
+      case 'CONFIRMED': return 'blue';
+      case 'CREATED': return 'gray';
+      default: return 'gray';
+    }
+  };
+
+  return (
+    <Box>
+      {/* Page Header */}
+      <Flex direction={{ base: 'column', md: 'row' }} justify="space-between" align={{ base: 'flex-start', md: 'center' }} mb={6}>
+        <Heading as="h1" size="lg" mb={{ base: 4, md: 0 }}>Dashboard</Heading>
+        
+        <HStack spacing={2} overflow="auto" className="hide-scrollbar" py={1}>
+          <Button 
+            size="sm" 
+            variant={timeRange === 'daily' ? 'solid' : 'outline'} 
+            colorScheme={timeRange === 'daily' ? 'brand' : 'gray'}
+            onClick={() => setTimeRange('daily')}
+          >
+            Daily
+          </Button>
+          <Button 
+            size="sm" 
+            variant={timeRange === 'weekly' ? 'solid' : 'outline'} 
+            colorScheme={timeRange === 'weekly' ? 'brand' : 'gray'} 
+            onClick={() => setTimeRange('weekly')}
+          >
+            Weekly
+          </Button>
+          <Button 
+            size="sm" 
+            variant={timeRange === 'monthly' ? 'solid' : 'outline'} 
+            colorScheme={timeRange === 'monthly' ? 'brand' : 'gray'} 
+            onClick={() => setTimeRange('monthly')}
+          >
+            Monthly
+          </Button>
+          <Button 
+            size="sm" 
+            variant={timeRange === 'yearly' ? 'solid' : 'outline'} 
+            colorScheme={timeRange === 'yearly' ? 'brand' : 'gray'} 
+            onClick={() => setTimeRange('yearly')}
+          >
+            Yearly
+          </Button>
+        </HStack>
+      </Flex>
+
+      {/* Stats Cards */}
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6} mb={8}>
+        {stats.map((stat, index) => (
+          <StatCard
+            key={index}
+            title={stat.title}
+            value={stat.value}
+            change={stat.change}
+            isPositive={stat.isPositive}
+            icon={stat.icon}
+            color={stat.color}
+          />
+        ))}
+      </SimpleGrid>
+
+      {/* Charts Section */}
+      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6} mb={8}>
+        {/* Sales Overview Chart */}
+        <Card variant="outline" boxShadow="sm" borderRadius="lg">
+          <CardHeader pb={0}>
+            <Flex justify="space-between" align="center">
+              <Heading size="md">Sales Overview</Heading>
+              <HStack spacing={4}>
+                <HStack>
+                  <Box h={3} w={3} borderRadius="full" bg="brand.500"></Box>
+                  <Text fontSize="xs" color="gray.500">This Period</Text>
+                </HStack>
+                <HStack>
+                  <Box h={3} w={3} borderRadius="full" bg="gray.300"></Box>
+                  <Text fontSize="xs" color="gray.500">Previous Period</Text>
+                </HStack>
+              </HStack>
+            </Flex>
+          </CardHeader>
+          <CardBody pt={2}>
+            <Box h="300px" w="100%">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={salesData}
+                  margin={{ top: 20, right: 20, left: 0, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f5f5f5" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="previous"
+                    stroke="#d0d0d0"
+                    strokeWidth={2}
+                    dot={false}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="current"
+                    stroke="#3D5291"
+                    strokeWidth={3}
+                    dot={false}
+                    activeDot={{ r: 8 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </Box>
+          </CardBody>
+        </Card>
+
+        {/* Category Distribution Chart */}
+        <Card variant="outline" boxShadow="sm" borderRadius="lg">
+          <CardHeader>
+            <Heading size="md">Sales by Category</Heading>
+          </CardHeader>
+          <CardBody>
+            <Flex h="300px" w="100%" justify="center" align="center">
+              <Box h="100%" w="60%">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={categoryData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                     >
-                        Daily
-                    </button>
-                    <button
-                        className={`px-4 py-2 text-sm rounded-md ${timeRange === 'weekly' ? 'bg-[#3d5291] text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
-                        onClick={() => setTimeRange('weekly')}
-                    >
-                        Weekly
-                    </button>
-                    <button
-                        className={`px-4 py-2 text-sm rounded-md ${timeRange === 'monthly' ? 'bg-[#3d5291] text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
-                        onClick={() => setTimeRange('monthly')}
-                    >
-                        Monthly
-                    </button>
-                    <button
-                        className={`px-4 py-2 text-sm rounded-md ${timeRange === 'yearly' ? 'bg-[#3d5291] text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
-                        onClick={() => setTimeRange('yearly')}
-                    >
-                        Yearly
-                    </button>
-                </div>
-            </div>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {stats.map((stat, index) => (
-                    <div key={index} className="bg-white p-6 rounded-lg shadow-sm border">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-gray-500">{stat.title}</p>
-                                <h3 className="text-2xl font-bold mt-1">{stat.value}</h3>
-                                <div className="flex items-center mt-2">
-                                    {stat.isPositive ? (
-                                        <ArrowUpRight size={16} className="text-green-500" />
-                                    ) : (
-                                        <ArrowDownRight size={16} className="text-red-500" />
-                                    )}
-                                    <span className={`text-sm ml-1 ${stat.isPositive ? 'text-green-500' : 'text-red-500'}`}>
-                                        {stat.change} from previous period
-                                    </span>
-                                </div>
-                            </div>
-                            <div className={`${stat.color} p-3 rounded-full text-white`}>
-                                {stat.icon}
-                            </div>
-                        </div>
-                    </div>
+                      {categoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </Box>
+              <VStack spacing={2} align="start" ml={4} mt={4}>
+                {categoryData.map((category, index) => (
+                  <HStack key={index}>
+                    <Box h={3} w={3} borderRadius="full" bg={COLORS[index % COLORS.length]}></Box>
+                    <Text fontSize="sm">{category.name}</Text>
+                  </HStack>
                 ))}
-            </div>
+              </VStack>
+            </Flex>
+          </CardBody>
+        </Card>
+      </SimpleGrid>
 
-            {/* Charts and Recent Orders */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Sales Chart */}
-                <div className="bg-white p-6 rounded-lg shadow-sm border lg:col-span-2">
-                    <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-semibold">Sales Overview</h2>
-                        <div className="flex items-center">
-                            <div className="w-3 h-3 rounded-full bg-[#3d5291] mr-1"></div>
-                            <span className="text-xs text-gray-500 mr-4">This Period</span>
-                            <div className="w-3 h-3 rounded-full bg-gray-300 mr-1"></div>
-                            <span className="text-xs text-gray-500">Previous Period</span>
-                        </div>
-                    </div>
-                    <div className="h-64 flex items-center justify-center">
-                        <div className="flex items-center">
-                            <BarChart size={40} className="text-gray-300 mr-2" />
-                            <p className="text-gray-500">Sales chart visualization will be implemented here</p>
-                        </div>
-                    </div>
-                </div>
+      {/* Top Selling Products and Recent Orders */}
+      <SimpleGrid columns={{ base: 1, lg: 3 }} spacing={6} mb={8}>
+        {/* Top Selling Products */}
+        <Card variant="outline" boxShadow="sm" borderRadius="lg">
+          <CardHeader>
+            <Flex justify="space-between" align="center">
+              <Heading size="md">Top Selling Products</Heading>
+              <Link to="/products">
+                <Button size="sm" variant="link" colorScheme="brand" rightIcon={<FiExternalLink size={14} />}>
+                  View All
+                </Button>
+              </Link>
+            </Flex>
+          </CardHeader>
+          <CardBody>
+            <VStack spacing={4} align="stretch">
+              {topProducts.map((product, index) => (
+                <Flex key={index} justify="space-between" align="center">
+                  <HStack>
+                    <Flex 
+                      align="center" 
+                      justify="center" 
+                      w={10} 
+                      h={10} 
+                      bg="gray.100" 
+                      borderRadius="md" 
+                      mr={3}
+                    >
+                      <Icon as={FiPackage} color="gray.500" boxSize={5} />
+                    </Flex>
+                    <Box>
+                      <Text fontWeight="medium">{product.name}</Text>
+                      <Text fontSize="sm" color="gray.500">{product.category}</Text>
+                    </Box>
+                  </HStack>
+                  <Text fontWeight="medium">{product.sold} units</Text>
+                </Flex>
+              ))}
+            </VStack>
+          </CardBody>
+        </Card>
 
-                {/* Top Selling Products */}
-                <div className="bg-white p-6 rounded-lg shadow-sm border">
-                    <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-semibold">Top Selling Products</h2>
-                        <Link to="/products" className="text-[#3d5291] text-sm hover:underline">
-                            View All
+        {/* Recent Orders - takes 2 column space */}
+        <Card variant="outline" boxShadow="sm" borderRadius="lg" gridColumn={{ lg: 'span 2' }}>
+          <CardHeader>
+            <Flex justify="space-between" align="center">
+              <Heading size="md">Recent Orders</Heading>
+              <Link to="/orders">
+                <Button size="sm" variant="link" colorScheme="brand" rightIcon={<FiExternalLink size={14} />}>
+                  View All Orders
+                </Button>
+              </Link>
+            </Flex>
+          </CardHeader>
+          <CardBody p={0}>
+            <Box overflowX="auto">
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th>Order ID</Th>
+                    <Th>Retailer</Th>
+                    <Th>Date</Th>
+                    <Th>Status</Th>
+                    <Th isNumeric>Amount</Th>
+                    <Th></Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {recentOrders.map((order, index) => (
+                    <Tr key={index}>
+                      <Td color="brand.500" fontWeight="medium">{order.id}</Td>
+                      <Td>{order.retailer}</Td>
+                      <Td>{order.date}</Td>
+                      <Td>
+                        <Badge colorScheme={getStatusColor(order.status)}>
+                          {order.status}
+                        </Badge>
+                      </Td>
+                      <Td isNumeric fontWeight="medium">{order.amount}</Td>
+                      <Td isNumeric>
+                        <Link to={`/orders?id=${order.id}`}>
+                          <Button size="sm" variant="ghost" colorScheme="brand">View</Button>
                         </Link>
-                    </div>
-                    <div className="space-y-4">
-                        {[
-                            { name: 'Product A', category: 'Category 1', sold: 145 },
-                            { name: 'Product B', category: 'Category 2', sold: 132 },
-                            { name: 'Product C', category: 'Category 1', sold: 121 },
-                            { name: 'Product D', category: 'Category 3', sold: 98 },
-                        ].map((product, index) => (
-                            <div key={index} className="flex items-center justify-between">
-                                <div className="flex items-center">
-                                    <div className="w-8 h-8 rounded bg-gray-200 flex items-center justify-center mr-3">
-                                        <Package size={16} className="text-gray-600" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium">{product.name}</p>
-                                        <p className="text-xs text-gray-500">{product.category}</p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-sm font-medium">{product.sold} units</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
+          </CardBody>
+        </Card>
+      </SimpleGrid>
 
-            {/* Recent Orders */}
-            <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-                <div className="flex items-center justify-between p-6 border-b">
-                    <h2 className="text-lg font-semibold">Recent Orders</h2>
-                    <Link to="/orders" className="text-[#3d5291] text-sm hover:underline">
-                        View All Orders
-                    </Link>
-                </div>
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Retailer</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200">
-                            {recentOrders.map((order, index) => (
-                                <tr key={index} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className="text-sm font-medium text-[#3d5291]">{order.id}</span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className="text-sm text-gray-700">{order.retailer}</span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className="text-sm text-gray-500">{order.date}</span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(order.status)}`}>
-                                            {order.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className="text-sm font-medium">{order.amount}</span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                                        <button className="text-[#3d5291] hover:underline text-sm">View</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+      {/* Zone Distribution */}
+      <Card variant="outline" boxShadow="sm" borderRadius="lg" mb={8}>
+        <CardHeader>
+          <Flex justify="space-between" align="center">
+            <Heading size="md">Zone Distribution</Heading>
+            <Link to="/zones">
+              <Button size="sm" variant="link" colorScheme="brand" rightIcon={<FiExternalLink size={14} />}>
+                Manage Zones
+              </Button>
+            </Link>
+          </Flex>
+        </CardHeader>
+        <CardBody>
+          <Flex direction={{ base: 'column', md: 'row' }} justify="space-around" align="center">
+            <Box h="300px" w={{ base: '100%', md: '50%' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={zoneData}
+                  margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f5f5f5" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} />
+                  <YAxis axisLine={false} tickLine={false} />
+                  <Tooltip />
+                  <Bar dataKey="retailers" fill="#3D5291" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </Box>
+            <SimpleGrid columns={{ base: 2, md: 2 }} spacing={6} mt={{ base: 6, md: 0 }} maxW={{ md: '40%' }}>
+              {zoneData.map((zone, index) => (
+                <HStack key={index} spacing={3}>
+                  <Box w={4} h={4} borderRadius="full" bg={zone.color} />
+                  <Box>
+                    <Text fontWeight="medium">{zone.name}</Text>
+                    <Text fontSize="sm" color="gray.500">{zone.retailers} retailers</Text>
+                    <Text fontSize="sm" color="gray.500">{zone.beats} beats</Text>
+                  </Box>
+                </HStack>
+              ))}
+            </SimpleGrid>
+          </Flex>
+        </CardBody>
+      </Card>
 
-            {/* Distribution Map */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border">
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-semibold">Zone Distribution</h2>
-                    <Link to="/zones" className="text-[#3d5291] text-sm hover:underline">
-                        Manage Zones
-                    </Link>
-          // Continuing from the previous code
-                </div>
-                <div className="h-64 flex items-center justify-center">
-                    <div className="flex flex-col items-center">
-                        <Map size={40} className="text-gray-300 mb-2" />
-                        <p className="text-gray-500">Zone distribution map will be implemented here</p>
-                        <div className="grid grid-cols-2 gap-4 mt-4 w-full max-w-md">
-                            {[
-                                { name: 'North Zone', beats: 7, retailers: 84, color: 'bg-blue-500' },
-                                { name: 'South Zone', beats: 7, retailers: 56, color: 'bg-green-500' },
-                                { name: 'East Zone', beats: 7, retailers: 63, color: 'bg-yellow-500' },
-                                { name: 'West Zone', beats: 7, retailers: 72, color: 'bg-purple-500' },
-                            ].map((zone, index) => (
-                                <div key={index} className="flex items-center">
-                                    <div className={`w-3 h-3 rounded-full ${zone.color} mr-2`}></div>
-                                    <div>
-                                        <p className="text-sm font-medium">{zone.name}</p>
-                                        <p className="text-xs text-gray-500">{zone.retailers} retailers</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Today's Beat Schedule */}
-            <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-                <div className="flex items-center justify-between p-6 border-b">
-                    <h2 className="text-lg font-semibold">Today's Beat Schedule</h2>
-                    <Link to="/beats" className="text-[#3d5291] text-sm hover:underline">
-                        View All Beats
-                    </Link>
-                </div>
-                <div className="p-6">
-                    <div className="flex items-center mb-4">
-                        <Calendar className="text-[#3d5291] mr-2" size={20} />
-                        <h3 className="text-md font-medium">Wednesday - Order Collection Day</h3>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {[
-                            { name: 'Beat 1 - Larkui', salesman: 'John Doe', retailers: 12, status: 'In Progress' },
-                            { name: 'Beat 2 - Central', salesman: 'Jane Smith', retailers: 8, status: 'Pending' },
-                            { name: 'Beat 3 - Market', salesman: 'Robert Johnson', retailers: 15, status: 'Completed' },
-                        ].map((beat, index) => (
-                            <div key={index} className="border rounded-lg p-4">
-                                <div className="flex justify-between items-start">
-                                    <h4 className="font-medium">{beat.name}</h4>
-                                    <span className={`text-xs px-2 py-1 rounded-full ${beat.status === 'Completed' ? 'bg-green-100 text-green-800' :
-                                            beat.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
-                                                'bg-yellow-100 text-yellow-800'
-                                        }`}>
-                                        {beat.status}
-                                    </span>
-                                </div>
-                                <p className="text-sm text-gray-500 mt-1">Salesman: {beat.salesman}</p>
-                                <p className="text-sm text-gray-500">Retailers: {beat.retailers}</p>
-                                <div className="mt-3 flex justify-between items-center">
-                                    <div className="w-full bg-gray-200 rounded-full h-2">
-                                        <div
-                                            className={`h-2 rounded-full ${beat.status === 'Completed' ? 'bg-green-500' :
-                                                    beat.status === 'In Progress' ? 'bg-blue-500' : 'bg-yellow-500'
-                                                }`}
-                                            style={{
-                                                width: beat.status === 'Completed' ? '100%' :
-                                                    beat.status === 'In Progress' ? '60%' : '0%'
-                                            }}
-                                        ></div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+      {/* Today's Beat Schedule */}
+      <Card variant="outline" boxShadow="sm" borderRadius="lg">
+        <CardHeader>
+          <Flex justify="space-between" align="center">
+            <HStack>
+              <Icon as={FiCalendar} color="brand.500" />
+              <Heading size="md">Today's Beat Schedule</Heading>
+            </HStack>
+            <Link to="/beats">
+              <Button size="sm" variant="link" colorScheme="brand" rightIcon={<FiExternalLink size={14} />}>
+                View All Beats
+              </Button>
+            </Link>
+          </Flex>
+        </CardHeader>
+        <CardBody>
+          <Text mb={4} fontWeight="medium">Wednesday - Order Collection Day</Text>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+            {beatSchedule.map((beat, index) => (
+              <Card key={index} variant="outline" size="sm">
+                <CardBody>
+                  <Flex justify="space-between" mb={2}>
+                    <Text fontWeight="medium">{beat.name}</Text>
+                    <Badge 
+                      colorScheme={
+                        beat.status === 'Completed' ? 'green' : 
+                        beat.status === 'In Progress' ? 'blue' : 'yellow'
+                      }
+                    >
+                      {beat.status}
+                    </Badge>
+                  </Flex>
+                  <Text fontSize="sm" color="gray.600">Salesman: {beat.salesman}</Text>
+                  <Text fontSize="sm" color="gray.600">Retailers: {beat.retailers}</Text>
+                  <Box mt={3}>
+                    <Progress 
+                      value={beat.completion} 
+                      size="sm" 
+                      colorScheme={
+                        beat.status === 'Completed' ? 'green' : 
+                        beat.status === 'In Progress' ? 'blue' : 'yellow'
+                      } 
+                      borderRadius="full"
+                    />
+                  </Box>
+                </CardBody>
+              </Card>
+            ))}
+          </SimpleGrid>
+        </CardBody>
+      </Card>
+    </Box>
+  );
 };
 
 export default Dashboard;

@@ -1,6 +1,10 @@
 // src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ChakraProvider } from '@chakra-ui/react';
 import { Toaster } from 'react-hot-toast';
+
+// Theme
+import theme from './theme';
 
 // Layouts
 import DashboardLayout from './layouts/DashboardLayout';
@@ -27,12 +31,23 @@ import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <Toaster position="top-right" />
-        <AppRoutes />
-      </AuthProvider>
-    </Router>
+    <ChakraProvider theme={theme}>
+      <Router>
+        <AuthProvider>
+          <Toaster 
+            position="top-right" 
+            toastOptions={{
+              style: {
+                borderRadius: '8px',
+                background: '#333',
+                color: '#fff',
+              },
+            }}
+          />
+          <AppRoutes />
+        </AuthProvider>
+      </Router>
+    </ChakraProvider>
   );
 }
 

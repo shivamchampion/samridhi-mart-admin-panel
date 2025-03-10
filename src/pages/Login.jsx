@@ -1,8 +1,27 @@
+// src/pages/Login.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, LogIn } from 'lucide-react';
+import {
+  Box,
+  Flex,
+  Stack,
+  Heading,
+  Text,
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  InputGroup,
+  InputRightElement,
+  FormErrorMessage,
+  useColorModeValue,
+  Alert,
+  AlertIcon,
+  Image,
+  useBreakpointValue,
+} from '@chakra-ui/react';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useAuth } from '../contexts/AuthContext';
-import { LogoFull } from '../components/logo';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,6 +32,7 @@ const Login = () => {
   
   const navigate = useNavigate();
   const { login, error: authContextError } = useAuth();
+  const logoSize = useBreakpointValue({ base: 'md', md: 'lg' });
 
   // Log any authentication errors
   useEffect(() => {
@@ -46,102 +66,106 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-600 dark:to-primary-800 p-4">
-      <div 
-        className="w-full max-w-md bg-white dark:bg-primary-700 rounded-2xl shadow-2xl p-8 space-y-6 animate-fade-in"
-      >
-        <div className="text-center">
-          <LogoFull className="mx-auto mb-6" />
-          <h2 className="text-2xl font-bold text-primary dark:text-white">Admin Login</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-300 mt-2">
-            Sign in to manage your Samridhi Mart system
-          </p>
-        </div>
-        
-        {(localError || authContextError) && (
-          <div 
-            className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded-md"
-          >
-            {localError || authContextError}
-          </div>
-        )}
-        
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label 
-              htmlFor="email" 
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >
-              Email address
-            </label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-primary-600 rounded-md shadow-sm 
-                         focus:outline-none focus:ring-2 focus:ring-primary 
-                         dark:bg-primary-800 dark:text-white"
-            />
-          </div>
-          
-          <div className="relative">
-            <label 
-              htmlFor="password" 
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type={showPassword ? 'text' : 'password'}
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-primary-600 rounded-md shadow-sm 
-                         focus:outline-none focus:ring-2 focus:ring-primary 
-                         dark:bg-primary-800 dark:text-white pr-10"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-10 transform -translate-y-1/2 text-gray-400 dark:text-gray-300"
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
-          
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full flex justify-center items-center py-3 px-4 
-                       bg-primary text-white rounded-md 
-                       hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary 
-                       transition-colors duration-300
-                       disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? (
-              <span className="animate-spin mr-2">🔄</span>
-            ) : (
-              <LogIn className="mr-2" size={20} />
-            )}
-            {isLoading ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
-        
-        <div className="text-center mt-4">
-          <a 
-            href="#" 
-            className="text-sm text-primary hover:underline dark:text-primary-300"
-          >
-            Forgot Password?
-          </a>
-        </div>
-      </div>
-    </div>
+    <Flex
+      minH={'100vh'}
+      align={'center'}
+      justify={'center'}
+      bg={useColorModeValue('gray.50', 'gray.800')}
+      backgroundImage="url('/pattern-bg.png')"
+      backgroundSize="cover"
+      backgroundPosition="center"
+    >
+      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6} w={{ base: "95%", sm: "400px" }}>
+        <Box
+          rounded={'lg'}
+          bg={useColorModeValue('white', 'gray.700')}
+          boxShadow={'xl'}
+          p={8}
+          borderRadius="xl"
+          backdropFilter="blur(10px)"
+          borderWidth="1px"
+          borderColor={useColorModeValue('gray.200', 'gray.600')}
+        >
+          <Stack align={'center'} mb={6}>
+            <Image src="/logo-bg.png" alt="Samridhi Mart" h="60px" mb={3} />
+            <Heading fontSize={'2xl'} color="brand.500">Admin Login</Heading>
+            <Text fontSize={'md'} color={'gray.600'} align="center">
+              Sign in to manage your distribution system
+            </Text>
+          </Stack>
+
+          {(localError || authContextError) && (
+            <Alert status="error" mb={4} borderRadius="md">
+              <AlertIcon />
+              {localError || authContextError}
+            </Alert>
+          )}
+
+          <form onSubmit={handleLogin}>
+            <Stack spacing={4}>
+              <FormControl id="email" isRequired>
+                <FormLabel>Email address</FormLabel>
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  focusBorderColor="brand.500"
+                  placeholder="your-email@example.com"
+                />
+              </FormControl>
+              
+              <FormControl id="password" isRequired>
+                <FormLabel>Password</FormLabel>
+                <InputGroup>
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    focusBorderColor="brand.500"
+                    placeholder="Enter your password"
+                  />
+                  <InputRightElement h={'full'}>
+                    <Button
+                      variant={'ghost'}
+                      onClick={() => setShowPassword(!showPassword)}
+                      size='sm'
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </FormControl>
+              
+              <Stack spacing={6}>
+                <Text
+                  align={'right'}
+                  color={'brand.500'}
+                  fontSize="sm"
+                  cursor="pointer"
+                  _hover={{ textDecoration: 'underline' }}
+                >
+                  Forgot password?
+                </Text>
+                
+                <Button
+                  type="submit"
+                  bg={'brand.500'}
+                  color={'white'}
+                  _hover={{ bg: 'brand.600' }}
+                  isLoading={isLoading}
+                  loadingText="Signing in..."
+                  size="lg"
+                  fontWeight="500"
+                >
+                  Sign in
+                </Button>
+              </Stack>
+            </Stack>
+          </form>
+        </Box>
+      </Stack>
+    </Flex>
   );
 };
 

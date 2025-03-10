@@ -1,129 +1,257 @@
 // src/components/Header.jsx
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu, Bell, Search, User, LogOut, Settings } from 'lucide-react';
+import {
+  Box,
+  Flex,
+  HStack,
+  IconButton,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  useDisclosure,
+  useColorModeValue,
+  Stack,
+  Avatar,
+  Badge,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  Text,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  PopoverHeader,
+  PopoverFooter,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+} from '@chakra-ui/react';
+import {
+  HamburgerIcon,
+  CloseIcon,
+  ChevronDownIcon,
+  BellIcon,
+  SettingsIcon,
+  SearchIcon,
+} from '@chakra-ui/icons';
+import { FiLogOut, FiUser } from 'react-icons/fi';
+import { useAuth } from '../contexts/AuthContext';
+import { Logo } from './Logo';
 
-const Header = ({ sidebarOpen, setSidebarOpen }) => {
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+const Header = ({ onSidebarOpen }) => {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { isOpen: isNotificationsOpen, onToggle: toggleNotifications, onClose: closeNotifications } = useDisclosure();
+  const [notifications] = useState([
+    { id: 1, title: 'New order placed', description: 'Order #1234 has been created', time: '2 hours ago' },
+    { id: 2, title: 'Stock running low', description: 'Product "Brand A - Product 1" is low on stock', time: '3 hours ago' },
+    { id: 3, title: 'New retailer registration', description: 'Retailer "Shop Express" has been registered', time: '5 hours ago' },
+  ]);
+  
   const navigate = useNavigate();
+  const { logout } = useAuth();
+  const notifBtnRef = useRef();
+  const searchRef = useRef();
+  const btnRef = useRef();
+  const { isOpen: isDrawerOpen, onOpen: openDrawer, onClose: closeDrawer } = useDisclosure();
 
   const handleLogout = () => {
-    // Add logout logic here
+    logout();
     navigate('/login');
   };
 
   return (
-    <header className="sticky top-0 z-10 bg-white border-b shadow-sm">
-      <div className="flex items-center justify-between h-16 px-4 md:px-6">
-        {/* Left: Hamburger Menu (Mobile) and Search */}
-        <div className="flex items-center">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="mr-4 md:hidden focus:outline-none"
-          >
-            <Menu size={24} />
-          </button>
-
-          <div className="hidden md:flex items-center px-3 py-2 bg-gray-100 rounded-md w-72">
-            <Search size={18} className="text-gray-500 mr-2" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="bg-transparent focus:outline-none w-full text-sm"
-            />
-          </div>
-        </div>
-
-        {/* Right: Notifications and Profile */}
-        <div className="flex items-center space-x-4">
-          {/* Notifications Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => {
-                setIsNotificationsOpen(!isNotificationsOpen);
-                setIsProfileOpen(false);
-              }}
-              className="relative p-1 rounded-full hover:bg-gray-100 focus:outline-none"
-            >
-              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-              <Bell size={20} />
-            </button>
-
-            {isNotificationsOpen && (
-              <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-10 border">
-                <div className="px-4 py-2 border-b">
-                  <h3 className="text-sm font-semibold">Notifications</h3>
-                </div>
-                <div className="max-h-72 overflow-y-auto">
-                  {[1, 2, 3].map((item) => (
-                    <div key={item} className="px-4 py-3 hover:bg-gray-50 border-b">
-                      <p className="text-sm font-medium">New order placed</p>
-                      <p className="text-xs text-gray-500">Order #1234 has been created</p>
-                      <p className="text-xs text-gray-400 mt-1">2 hours ago</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="px-4 py-2 text-center border-t">
-                  <button className="text-sm text-[#3d5291] hover:underline">
-                    View all notifications
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Profile Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => {
-                setIsProfileOpen(!isProfileOpen);
-                setIsNotificationsOpen(false);
-              }}
-              className="flex items-center space-x-2 focus:outline-none"
-            >
-              <div className="w-8 h-8 rounded-full bg-[#3d5291] flex items-center justify-center text-white">
-                <User size={16} />
-              </div>
-              <span className="hidden md:block text-sm font-medium">Admin User</span>
-            </button>
-
-            {isProfileOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border">
-                <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  <User size={16} className="mr-2" />
-                  <span>My Profile</span>
-                </button>
-                <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  <Settings size={16} className="mr-2" />
-                  <span>Settings</span>
-                </button>
-                <div className="border-t my-1"></div>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                >
-                  <LogOut size={16} className="mr-2" />
-                  <span>Logout</span>
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Search - Only visible on mobile */}
-      <div className="md:hidden px-4 pb-3">
-        <div className="flex items-center px-3 py-2 bg-gray-100 rounded-md">
-          <Search size={18} className="text-gray-500 mr-2" />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="bg-transparent focus:outline-none w-full text-sm"
+    <Box
+      bg={useColorModeValue('white', 'gray.900')}
+      px={4}
+      py={2}
+      borderBottom="1px"
+      borderColor={useColorModeValue('gray.200', 'gray.700')}
+      position="sticky"
+      top="0"
+      zIndex="sticky"
+      boxShadow="sm"
+    >
+      <Flex h={16} alignItems="center" justifyContent="space-between">
+        <HStack spacing={8} alignItems="center">
+          <IconButton
+            size="md"
+            icon={<HamburgerIcon />}
+            aria-label="Open Menu"
+            display={{ md: 'none' }}
+            onClick={onSidebarOpen}
           />
-        </div>
-      </div>
-    </header>
+          <Box display={{ base: 'none', md: 'flex' }}>
+            <Logo />
+          </Box>
+          
+          {/* Desktop Search Bar */}
+          <InputGroup maxW="sm" display={{ base: 'none', md: 'flex' }}>
+            <InputLeftElement pointerEvents="none">
+              <SearchIcon color="gray.400" />
+            </InputLeftElement>
+            <Input 
+              placeholder="Search..." 
+              bg="gray.50"
+              borderRadius="md"
+              _focus={{ bg: 'white', borderColor: 'brand.500' }}
+            />
+          </InputGroup>
+        </HStack>
+
+        <Flex alignItems="center">
+          {/* Mobile Search Button */}
+          <IconButton
+            aria-label="Search"
+            icon={<SearchIcon />}
+            size="md"
+            variant="ghost"
+            display={{ base: 'flex', md: 'none' }}
+            mr={2}
+            onClick={() => setIsSearchOpen(!isSearchOpen)}
+            ref={searchRef}
+          />
+          
+          {/* Notifications */}
+          <Popover
+            isOpen={isNotificationsOpen}
+            onClose={closeNotifications}
+            placement="bottom-end"
+            closeOnBlur={true}
+          >
+            <PopoverTrigger>
+              <Box position="relative" ref={notifBtnRef}>
+                <IconButton
+                  aria-label="Notifications"
+                  icon={<BellIcon />}
+                  size="md"
+                  variant="ghost"
+                  onClick={toggleNotifications}
+                  mr={2}
+                />
+                <Badge
+                  position="absolute"
+                  top="-2px"
+                  right="-2px"
+                  colorScheme="red"
+                  borderRadius="full"
+                  h="18px"
+                  minW="18px"
+                  textAlign="center"
+                >
+                  {notifications.length}
+                </Badge>
+              </Box>
+            </PopoverTrigger>
+            <PopoverContent width="320px" maxH="400px" overflow="hidden" _focus={{ boxShadow: 'md' }}>
+              <PopoverHeader fontWeight="semibold" borderBottomWidth="1px">
+                Notifications
+              </PopoverHeader>
+              <PopoverBody p={0} overflowY="auto" maxH="300px">
+                <Stack spacing={0} divider={<MenuDivider />}>
+                  {notifications.map((notification) => (
+                    <Box key={notification.id} px={4} py={3} _hover={{ bg: 'gray.50' }} cursor="pointer">
+                      <Text fontWeight="medium" fontSize="sm">
+                        {notification.title}
+                      </Text>
+                      <Text fontSize="xs" color="gray.500" mt={1}>
+                        {notification.description}
+                      </Text>
+                      <Text fontSize="xs" color="gray.400" mt={1}>
+                        {notification.time}
+                      </Text>
+                    </Box>
+                  ))}
+                </Stack>
+              </PopoverBody>
+              <PopoverFooter borderTopWidth="1px" p={2}>
+                <Button variant="link" size="sm" colorScheme="brand" width="full">
+                  View all notifications
+                </Button>
+              </PopoverFooter>
+            </PopoverContent>
+          </Popover>
+
+          {/* User Menu */}
+          <Menu>
+            <MenuButton
+              as={Button}
+              rounded="full"
+              variant="ghost"
+              cursor="pointer"
+              minW={0}
+              _hover={{ bg: 'gray.50' }}
+              rightIcon={<ChevronDownIcon />}
+            >
+              <HStack>
+                <Avatar
+                  size="sm"
+                  name="Admin User"
+                  bg="brand.500"
+                  color="white"
+                />
+                <Box display={{ base: 'none', md: 'block' }}>
+                  <Text fontSize="sm" fontWeight="medium">Admin User</Text>
+                </Box>
+              </HStack>
+            </MenuButton>
+            <MenuList>
+              <MenuItem icon={<FiUser />}>My Profile</MenuItem>
+              <MenuItem icon={<SettingsIcon />}>Settings</MenuItem>
+              <MenuDivider />
+              <MenuItem icon={<FiLogOut />} onClick={handleLogout}>Logout</MenuItem>
+            </MenuList>
+          </Menu>
+        </Flex>
+      </Flex>
+
+      {/* Mobile Search Bar */}
+      {isSearchOpen && (
+        <Box pb={4} display={{ md: 'none' }}>
+          <InputGroup>
+            <InputLeftElement pointerEvents="none">
+              <SearchIcon color="gray.400" />
+            </InputLeftElement>
+            <Input 
+              placeholder="Search..." 
+              bg="gray.50"
+              autoFocus
+              onBlur={() => setIsSearchOpen(false)}
+            />
+          </InputGroup>
+        </Box>
+      )}
+
+      {/* Mobile Menu Drawer */}
+      <Drawer
+        isOpen={isDrawerOpen}
+        placement="left"
+        onClose={closeDrawer}
+        finalFocusRef={btnRef}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Menu</DrawerHeader>
+          <DrawerBody>
+            {/* Mobile menu content would go here */}
+          </DrawerBody>
+          <DrawerFooter>
+            <Button variant="outline" mr={3} onClick={closeDrawer}>
+              Close
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </Box>
   );
 };
 
