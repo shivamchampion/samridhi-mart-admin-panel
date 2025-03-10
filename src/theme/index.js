@@ -1,5 +1,6 @@
 // src/theme/index.js
 import { extendTheme } from '@chakra-ui/react';
+import { enhancedComponents, keyframes, globalStyles } from './extensions';
 
 // Defining custom colors based on Samridhi Mart branding
 const colors = {
@@ -107,314 +108,11 @@ const shadows = {
   dropdown: '0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08)',
 };
 
-// Component style overrides
-const components = {
-  Button: {
-    baseStyle: {
-      fontWeight: 500,
-      borderRadius: 'md',
-      _focus: {
-        boxShadow: 'outline',
-      },
-      _hover: {
-        transform: 'translateY(-1px)',
-        boxShadow: 'md',
-        _disabled: {
-          transform: 'none',
-          boxShadow: 'none',
-        },
-      },
-      _active: {
-        transform: 'translateY(0)',
-        boxShadow: 'sm',
-      },
-      transition: 'all 0.2s',
-    },
-    variants: {
-      primary: {
-        bg: 'brand.500',
-        color: 'white',
-        _hover: {
-          bg: 'brand.600',
-          _disabled: {
-            bg: 'brand.500',
-          },
-        },
-        _active: { bg: 'brand.700' },
-      },
-      secondary: {
-        bg: 'white',
-        color: 'gray.700',
-        border: '1px solid',
-        borderColor: 'gray.200',
-        _hover: {
-          bg: 'gray.50',
-        },
-        _active: { bg: 'gray.100' },
-      },
-      outline: {
-        bg: 'transparent',
-        color: 'brand.500',
-        border: '1px solid',
-        borderColor: 'brand.500',
-        _hover: {
-          bg: 'brand.50',
-        },
-        _active: { bg: 'brand.100' },
-      },
-      ghost: {
-        color: 'gray.700',
-        _hover: {
-          bg: 'gray.100',
-        },
-        _active: { bg: 'gray.200' },
-      },
-      accent: {
-        bg: 'accent.500',
-        color: 'white',
-        _hover: {
-          bg: 'accent.600',
-          _disabled: {
-            bg: 'accent.500',
-          },
-        },
-        _active: { bg: 'accent.700' },
-      },
-    },
-    defaultProps: {
-      variant: 'primary',
-      size: 'md',
-    },
-  },
-  Card: {
-    baseStyle: {
-      container: {
-        bg: 'white',
-        borderRadius: 'xl',
-        boxShadow: 'card',
-        overflow: 'hidden',
-        transition: 'all 0.2s ease-in-out',
-        _hover: {
-          boxShadow: 'lg',
-          transform: 'translateY(-2px)',
-        },
-      },
-      header: {
-        p: 6,
-        borderBottom: '1px solid',
-        borderColor: 'gray.100',
-      },
-      body: {
-        p: 6,
-      },
-      footer: {
-        p: 6,
-        borderTop: '1px solid',
-        borderColor: 'gray.100',
-        bg: 'gray.50',
-      },
-    },
-  },
-  Input: {
-    variants: {
-      outline: {
-        field: {
-          bg: 'white',
-          borderRadius: 'md',
-          borderWidth: '1px',
-          borderColor: 'gray.300',
-          boxShadow: 'xs',
-          _placeholder: {
-            color: 'gray.400',
-          },
-          _hover: {
-            borderColor: 'gray.400',
-          },
-          _focus: {
-            borderColor: 'brand.500',
-            boxShadow: '0 0 0 1px var(--chakra-colors-brand-500)',
-          },
-          _disabled: {
-            bg: 'gray.50',
-            opacity: 0.7,
-          },
-          transition: 'all 0.2s',
-        },
-      },
-      filled: {
-        field: {
-          bg: 'gray.100',
-          borderRadius: 'md',
-          _hover: {
-            bg: 'gray.200',
-          },
-          _focus: {
-            bg: 'white',
-            borderColor: 'brand.500',
-          },
-          transition: 'all 0.2s',
-        },
-      },
-    },
-    defaultProps: {
-      variant: 'outline',
-    },
-  },
-  Select: {
-    variants: {
-      outline: {
-        field: {
-          bg: 'white',
-          borderRadius: 'md',
-          borderWidth: '1px',
-          borderColor: 'gray.300',
-          boxShadow: 'xs',
-          _hover: {
-            borderColor: 'gray.400',
-          },
-          _focus: {
-            borderColor: 'brand.500',
-            boxShadow: '0 0 0 1px var(--chakra-colors-brand-500)',
-          },
-          _disabled: {
-            bg: 'gray.50',
-            opacity: 0.7,
-          },
-          transition: 'all 0.2s',
-        },
-      },
-    },
-    defaultProps: {
-      variant: 'outline',
-    },
-  },
-  Textarea: {
-    variants: {
-      outline: {
-        borderRadius: 'md',
-        borderWidth: '1px',
-        borderColor: 'gray.300',
-        bg: 'white',
-        boxShadow: 'xs',
-        _hover: {
-          borderColor: 'gray.400',
-        },
-        _focus: {
-          borderColor: 'brand.500',
-          boxShadow: '0 0 0 1px var(--chakra-colors-brand-500)',
-        },
-        _disabled: {
-          bg: 'gray.50',
-          opacity: 0.7,
-        },
-        transition: 'all 0.2s',
-      },
-    },
-    defaultProps: {
-      variant: 'outline',
-    },
-  },
-  Checkbox: {
-    baseStyle: {
-      control: {
-        borderColor: 'gray.300',
-        _focus: {
-          boxShadow: '0 0 0 2px var(--chakra-colors-brand-100)',
-        },
-        _hover: {
-          borderColor: 'brand.500',
-        },
-        transition: 'all 0.2s',
-      },
-    },
-  },
-  Table: {
-    variants: {
-      simple: {
-        th: {
-          bg: 'gray.50',
-          color: 'gray.600',
-          fontSize: 'xs',
-          fontWeight: 'semibold',
-          textTransform: 'uppercase',
-          letterSpacing: 'wider',
-          px: 6,
-          py: 3,
-        },
-        td: {
-          px: 6,
-          py: 4,
-          borderBottom: '1px solid',
-          borderColor: 'gray.100',
-        },
-        tbody: {
-          tr: {
-            _hover: {
-              bg: 'gray.50',
-              transition: 'background-color 0.2s',
-            },
-          },
-        },
-      },
-    },
-  },
-  Drawer: {
-    baseStyle: {
-      dialog: {
-        borderRadius: 'md',
-        boxShadow: '2xl',
-      },
-    },
-  },
-  Modal: {
-    baseStyle: {
-      dialog: {
-        borderRadius: 'xl',
-        boxShadow: '2xl',
-      },
-      overlay: {
-        backdropFilter: 'blur(2px)',
-      },
-    },
-  },
-  Badge: {
-    baseStyle: {
-      textTransform: 'normal',
-      fontWeight: 'medium',
-      borderRadius: 'full',
-    },
-    variants: {
-      solid: {
-        bg: 'brand.500',
-        color: 'white',
-      },
-      subtle: {
-        bg: 'brand.100',
-        color: 'brand.800',
-      },
-      outline: {
-        borderColor: 'brand.500',
-        color: 'brand.500',
-      },
-    },
-  },
-  Tabs: {
-    variants: {
-      line: {
-        tab: {
-          _selected: {
-            color: 'brand.500',
-            borderColor: 'brand.500',
-          },
-          _hover: {
-            color: 'brand.400',
-          },
-          transition: 'all 0.2s',
-        },
-      },
-    },
-  },
-};
+// Define animation keyframes
+const customKeyframes = keyframes;
+
+// Bring in enhanced component styles from extensions
+const components = enhancedComponents;
 
 // Global styles
 const styles = {
@@ -426,30 +124,12 @@ const styles = {
     '*::selection': {
       bg: 'brand.100',
     },
-    '.hover-scale': {
-      transition: 'transform 0.2s',
-      _hover: {
-        transform: 'scale(1.02)',
-      },
-    },
-    '.fade-in': {
-      animation: 'fadeIn 0.5s ease-in-out',
-    },
-    '@keyframes fadeIn': {
-      '0%': { opacity: 0 },
-      '100%': { opacity: 1 },
-    },
-    '.slide-up': {
-      animation: 'slideUp 0.3s ease-out',
-    },
-    '@keyframes slideUp': {
-      '0%': { transform: 'translateY(10px)', opacity: 0 },
-      '100%': { transform: 'translateY(0)', opacity: 1 },
-    },
+    // Add global animation and utility classes
+    ...globalStyles
   },
 };
 
-// Layer styles
+// Layer styles for reusable component styles
 const layerStyles = {
   card: {
     bg: 'white',
@@ -562,6 +242,7 @@ const breakpoints = {
   '2xl': '96em', // 1536px
 };
 
+// Create and export the extended theme
 const theme = extendTheme({
   colors,
   fonts,
@@ -571,6 +252,7 @@ const theme = extendTheme({
   layerStyles,
   textStyles,
   breakpoints,
+  keyframes: customKeyframes
 });
 
 export default theme;
