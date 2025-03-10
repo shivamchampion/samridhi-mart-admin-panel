@@ -5,11 +5,13 @@ import {
     MoreVertical, ChevronLeft, ChevronRight, Download,
     Upload, Eye
 } from 'lucide-react';
+import SearchInput from '../components/SearchInput';
 
 const Products = () => {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
 
     // Mock data for products
     const products = [
@@ -83,22 +85,22 @@ const Products = () => {
                 <div className="mt-4 sm:mt-0 flex flex-wrap gap-3">
                     <button
                         onClick={() => setIsFilterOpen(!isFilterOpen)}
-                        className="px-4 py-2 flex items-center text-sm bg-white border rounded-md hover:bg-gray-50"
+                        className="px-4 py-2 flex items-center text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 shadow-sm"
                     >
                         <Filter size={16} className="mr-2" />
                         Filter
                     </button>
-                    <button className="px-4 py-2 flex items-center text-sm bg-white border rounded-md hover:bg-gray-50">
+                    <button className="px-4 py-2 flex items-center text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 shadow-sm">
                         <Download size={16} className="mr-2" />
                         Export
                     </button>
-                    <button className="px-4 py-2 flex items-center text-sm bg-white border rounded-md hover:bg-gray-50">
+                    <button className="px-4 py-2 flex items-center text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 shadow-sm">
                         <Upload size={16} className="mr-2" />
                         Import
                     </button>
                     <button
                         onClick={handleAddNew}
-                        className="px-4 py-2 flex items-center text-sm bg-[#3d5291] text-white rounded-md hover:bg-[#2d3e6d]"
+                        className="px-4 py-2 flex items-center text-sm bg-[#3d5291] text-white rounded-md hover:bg-[#2d3e6d] shadow-sm"
                     >
                         <Plus size={16} className="mr-2" />
                         Add Product
@@ -108,30 +110,30 @@ const Products = () => {
 
             {/* Filter Section */}
             {isFilterOpen && (
-                <div className="bg-white p-4 rounded-lg border">
+                <div className="bg-white p-4 rounded-lg border shadow-sm">
                     <h2 className="text-lg font-medium mb-4">Filter Products</h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                            <select className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <div className="form-group">
+                            <label className="form-label">Category</label>
+                            <select className="form-select">
                                 <option value="">All Categories</option>
                                 <option>Category 1</option>
                                 <option>Category 2</option>
                                 <option>Category 3</option>
                             </select>
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
-                            <select className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <div className="form-group">
+                            <label className="form-label">Brand</label>
+                            <select className="form-select">
                                 <option value="">All Brands</option>
                                 <option>Brand A</option>
                                 <option>Brand B</option>
                                 <option>Brand C</option>
                             </select>
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                            <select className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <div className="form-group">
+                            <label className="form-label">Status</label>
+                            <select className="form-select">
                                 <option value="">All Status</option>
                                 <option value="active">Active</option>
                                 <option value="inactive">Inactive</option>
@@ -139,10 +141,10 @@ const Products = () => {
                         </div>
                     </div>
                     <div className="mt-4 flex justify-end">
-                        <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md mr-2">
+                        <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md mr-2 hover:bg-gray-200">
                             Reset
                         </button>
-                        <button className="px-4 py-2 bg-[#3d5291] text-white rounded-md">
+                        <button className="px-4 py-2 bg-[#3d5291] text-white rounded-md hover:bg-[#2d3e6d]">
                             Apply Filters
                         </button>
                     </div>
@@ -150,17 +152,14 @@ const Products = () => {
             )}
 
             {/* Search Bar */}
-            <div className="flex items-center bg-white px-3 py-2 rounded-lg border">
-                <Search size={20} className="text-gray-400" />
-                <input
-                    type="text"
-                    placeholder="Search products by name, ID, brand..."
-                    className="w-full ml-2 focus:outline-none"
-                />
-            </div>
+            <SearchInput 
+                placeholder="Search products by name, ID, brand..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
 
             {/* Products Table */}
-            <div className="bg-white rounded-lg border overflow-hidden">
+            <div className="bg-white rounded-lg border overflow-hidden shadow-sm">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
@@ -277,11 +276,11 @@ const Products = () => {
                         Showing <span className="font-medium">1</span> to <span className="font-medium">5</span> of <span className="font-medium">42</span> products
                     </div>
                     <div className="flex space-x-2">
-                        <button className="px-3 py-1 border rounded bg-white text-gray-600 hover:bg-gray-50 flex items-center">
+                        <button className="px-3 py-1 border rounded bg-white text-gray-600 hover:bg-gray-50 flex items-center shadow-sm">
                             <ChevronLeft size={16} />
                             <span className="ml-1">Previous</span>
                         </button>
-                        <button className="px-3 py-1 border rounded bg-white text-gray-600 hover:bg-gray-50 flex items-center">
+                        <button className="px-3 py-1 border rounded bg-white text-gray-600 hover:bg-gray-50 flex items-center shadow-sm">
                             <span className="mr-1">Next</span>
                             <ChevronRight size={16} />
                         </button>
@@ -305,20 +304,20 @@ const Products = () => {
                                     <div className="col-span-2">
                                         <h3 className="text-lg font-medium mb-4">Basic Information</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                                            <div className="form-group">
+                                                <label className="form-label">Product Name</label>
                                                 <input
                                                     type="text"
-                                                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                    className="form-input"
                                                     defaultValue={selectedProduct?.name || ''}
                                                     required
                                                 />
                                             </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">Product ID</label>
+                                            <div className="form-group">
+                                                <label className="form-label">Product ID</label>
                                                 <input
                                                     type="text"
-                                                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                    className="form-input"
                                                     defaultValue={selectedProduct?.id || ''}
                                                     disabled={!!selectedProduct}
                                                 />
@@ -330,10 +329,10 @@ const Products = () => {
                                     </div>
 
                                     {/* Category and Brand */}
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                                    <div className="form-group">
+                                        <label className="form-label">Category</label>
                                         <select
-                                            className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            className="form-select"
                                             defaultValue={selectedProduct?.category || ''}
                                             required
                                         >
@@ -344,10 +343,10 @@ const Products = () => {
                                         </select>
                                     </div>
 
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                                    <div className="form-group">
+                                        <label className="form-label">Brand</label>
                                         <select
-                                            className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            className="form-select"
                                             defaultValue={selectedProduct?.brand || ''}
                                             required
                                         >
@@ -362,48 +361,48 @@ const Products = () => {
                                     <div className="col-span-2">
                                         <h3 className="text-lg font-medium mb-4">Unit Information</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">Big Unit</label>
+                                            <div className="form-group">
+                                                <label className="form-label">Big Unit</label>
                                                 <input
                                                     type="text"
-                                                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                    className="form-input"
                                                     defaultValue={selectedProduct?.big_unit || ''}
                                                     required
                                                 />
                                             </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">Small Unit</label>
+                                            <div className="form-group">
+                                                <label className="form-label">Small Unit</label>
                                                 <input
                                                     type="text"
-                                                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                    className="form-input"
                                                     defaultValue={selectedProduct?.small_unit || ''}
                                                     required
                                                 />
                                             </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">Smallest Unit</label>
+                                            <div className="form-group">
+                                                <label className="form-label">Smallest Unit</label>
                                                 <input
                                                     type="text"
-                                                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                    className="form-input"
                                                     defaultValue={selectedProduct?.smallest_unit || ''}
                                                     required
                                                 />
                                             </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">Big to Small Conversion</label>
+                                            <div className="form-group">
+                                                <label className="form-label">Big to Small Conversion</label>
                                                 <input
                                                     type="number"
-                                                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                    className="form-input"
                                                     defaultValue={selectedProduct?.conversion_factor || ''}
                                                     required
                                                 />
                                                 <p className="mt-1 text-xs text-gray-500">How many small units make 1 big unit</p>
                                             </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">Small to Smallest Conversion</label>
+                                            <div className="form-group">
+                                                <label className="form-label">Small to Smallest Conversion</label>
                                                 <input
                                                     type="number"
-                                                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                    className="form-input"
                                                     defaultValue={selectedProduct?.conversion_factor_small_to_smallest || ''}
                                                     required
                                                 />
@@ -416,37 +415,37 @@ const Products = () => {
                                     <div className="col-span-2">
                                         <h3 className="text-lg font-medium mb-4">Pricing Information</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">MRP</label>
+                                            <div className="form-group">
+                                                <label className="form-label">MRP</label>
                                                 <div className="relative">
                                                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">₹</span>
                                                     <input
                                                         type="number"
-                                                        className="w-full pl-7 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                        className="form-input pl-7"
                                                         defaultValue={selectedProduct?.mrp || ''}
                                                         required
                                                     />
                                                 </div>
                                             </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">Selling Price (Big Unit)</label>
+                                            <div className="form-group">
+                                                <label className="form-label">Selling Price (Big Unit)</label>
                                                 <div className="relative">
                                                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">₹</span>
                                                     <input
                                                         type="number"
-                                                        className="w-full pl-7 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                        className="form-input pl-7"
                                                         defaultValue={selectedProduct?.sp_big_unit || ''}
                                                         required
                                                     />
                                                 </div>
                                             </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">Selling Price (Small Unit)</label>
+                                            <div className="form-group">
+                                                <label className="form-label">Selling Price (Small Unit)</label>
                                                 <div className="relative">
                                                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">₹</span>
                                                     <input
                                                         type="number"
-                                                        className="w-full pl-7 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                        className="form-input pl-7"
                                                         defaultValue={selectedProduct?.sp_small_unit || ''}
                                                         required
                                                     />
@@ -459,27 +458,27 @@ const Products = () => {
                                     <div className="col-span-2">
                                         <h3 className="text-lg font-medium mb-4">GST Information</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">CGST (%)</label>
+                                            <div className="form-group">
+                                                <label className="form-label">CGST (%)</label>
                                                 <input
                                                     type="number"
-                                                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                    className="form-input"
                                                     defaultValue={selectedProduct?.cgst || ''}
                                                 />
                                             </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">SGST (%)</label>
+                                            <div className="form-group">
+                                                <label className="form-label">SGST (%)</label>
                                                 <input
                                                     type="number"
-                                                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                    className="form-input"
                                                     defaultValue={selectedProduct?.sgst || ''}
                                                 />
                                             </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">IGST (%)</label>
+                                            <div className="form-group">
+                                                <label className="form-label">IGST (%)</label>
                                                 <input
                                                     type="number"
-                                                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                    className="form-input"
                                                     defaultValue={selectedProduct?.igst || ''}
                                                 />
                                             </div>
@@ -487,21 +486,21 @@ const Products = () => {
                                     </div>
 
                                     {/* Commission */}
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Commission (%)</label>
+                                    <div className="form-group">
+                                        <label className="form-label">Commission (%)</label>
                                         <input
                                             type="number"
-                                            className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            className="form-input"
                                             defaultValue={selectedProduct?.commission || ''}
                                         />
                                         <p className="mt-1 text-xs text-gray-500">Fixed percentage for distributor commission</p>
                                     </div>
 
                                     {/* Status */}
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                    <div className="form-group">
+                                        <label className="form-label">Status</label>
                                         <select
-                                            className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            className="form-select"
                                             defaultValue={selectedProduct?.active ? 'active' : 'inactive'}
                                         >
                                             <option value="active">Active</option>

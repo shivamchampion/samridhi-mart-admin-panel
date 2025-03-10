@@ -5,11 +5,13 @@ import {
   MapPin, Users, Store, ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SearchInput from '../components/SearchInput';
 
 const Zones = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedZone, setSelectedZone] = useState(null);
   const [expandedZone, setExpandedZone] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   
   // Mock data for zones
   const zones = [
@@ -126,7 +128,7 @@ const Zones = () => {
         <div className="mt-4 sm:mt-0">
           <button
             onClick={handleAddNew}
-            className="px-4 py-2 flex items-center text-sm bg-[#3d5291] text-white rounded-md hover:bg-[#2d3e6d]"
+            className="px-4 py-2 flex items-center text-sm bg-[#3d5291] text-white rounded-md hover:bg-[#2d3e6d] shadow-sm"
           >
             <Plus size={16} className="mr-2" />
             Add Zone
@@ -135,19 +137,16 @@ const Zones = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="flex items-center bg-white px-3 py-2 rounded-lg border">
-        <Search size={20} className="text-gray-400" />
-        <input
-          type="text"
-          placeholder="Search zones by name, distributor..."
-          className="w-full ml-2 focus:outline-none"
-        />
-      </div>
+      <SearchInput 
+        placeholder="Search zones by name, distributor..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
 
       {/* Zones Cards */}
       <div className="grid grid-cols-1 gap-6">
         {zones.map((zone) => (
-          <div key={zone.id} className={`bg-white rounded-lg border overflow-hidden ${!zone.active ? 'opacity-70' : ''}`}>
+          <div key={zone.id} className={`bg-white rounded-lg border overflow-hidden shadow-sm ${!zone.active ? 'opacity-70' : ''}`}>
             <div className="p-6">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4">
                 <div className="flex-1">
@@ -294,20 +293,20 @@ const Zones = () => {
                   <div>
                     <h3 className="text-lg font-medium mb-4">Zone Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Zone Name</label>
+                      <div className="md:col-span-2 form-group">
+                        <label className="form-label">Zone Name</label>
                         <input
                           type="text"
-                          className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                          className="form-input"
                           defaultValue={selectedZone?.name || ''}
                           required
                         />
                       </div>
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                      <div className="md:col-span-2 form-group">
+                        <label className="form-label">Description</label>
                         <textarea
                           rows={3}
-                          className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                          className="form-textarea"
                           defaultValue={selectedZone?.description || ''}
                         />
                       </div>
@@ -317,10 +316,10 @@ const Zones = () => {
                   {/* Distributor Assignment */}
                   <div>
                     <h3 className="text-lg font-medium mb-4">Distributor Assignment</h3>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Assigned Distributor</label>
+                    <div className="form-group">
+                      <label className="form-label">Assigned Distributor</label>
                       <select 
-                        className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        className="form-select"
                         defaultValue={selectedZone?.distributorId || ''}
                         required
                       >
@@ -334,10 +333,10 @@ const Zones = () => {
                   </div>
                   
                   {/* Status */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                  <div className="form-group">
+                    <label className="form-label">Status</label>
                     <select 
-                      className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                      className="form-select"
                       defaultValue={selectedZone?.active ? 'active' : 'inactive'}
                     >
                       <option value="active">Active</option>

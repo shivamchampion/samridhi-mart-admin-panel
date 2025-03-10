@@ -111,6 +111,10 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   focusBorderColor="brand.500"
                   placeholder="your-email@example.com"
+                  bg="white"
+                  borderColor="gray.300"
+                  boxShadow="sm"
+                  _hover={{ borderColor: "gray.400" }}
                 />
               </FormControl>
               
@@ -123,6 +127,10 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     focusBorderColor="brand.500"
                     placeholder="Enter your password"
+                    bg="white"
+                    borderColor="gray.300"
+                    boxShadow="sm"
+                    _hover={{ borderColor: "gray.400" }}
                   />
                   <InputRightElement h={'full'}>
                     <Button

@@ -135,20 +135,95 @@ const components = {
     variants: {
       outline: {
         field: {
+          bg: 'white',
           borderRadius: 'md',
-          borderColor: 'gray.200',
+          borderWidth: '1px',
+          borderColor: 'gray.300',
+          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+          _placeholder: {
+            color: 'gray.400',
+          },
           _hover: {
-            borderColor: 'gray.300',
+            borderColor: 'gray.400',
           },
           _focus: {
             borderColor: 'brand.500',
             boxShadow: '0 0 0 1px var(--chakra-colors-brand-500)',
+          },
+          _disabled: {
+            bg: 'gray.50',
+            opacity: 0.7,
           },
         },
       },
     },
     defaultProps: {
       variant: 'outline',
+    },
+  },
+  Select: {
+    variants: {
+      outline: {
+        field: {
+          bg: 'white',
+          borderRadius: 'md',
+          borderWidth: '1px',
+          borderColor: 'gray.300',
+          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+          _hover: {
+            borderColor: 'gray.400',
+          },
+          _focus: {
+            borderColor: 'brand.500',
+            boxShadow: '0 0 0 1px var(--chakra-colors-brand-500)',
+          },
+          _disabled: {
+            bg: 'gray.50',
+            opacity: 0.7,
+          },
+        },
+      },
+    },
+    defaultProps: {
+      variant: 'outline',
+    },
+  },
+  Textarea: {
+    variants: {
+      outline: {
+        borderRadius: 'md',
+        borderWidth: '1px',
+        borderColor: 'gray.300',
+        bg: 'white',
+        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+        _hover: {
+          borderColor: 'gray.400',
+        },
+        _focus: {
+          borderColor: 'brand.500',
+          boxShadow: '0 0 0 1px var(--chakra-colors-brand-500)',
+        },
+        _disabled: {
+          bg: 'gray.50',
+          opacity: 0.7,
+        },
+      },
+    },
+    defaultProps: {
+      variant: 'outline',
+    },
+  },
+  Checkbox: {
+    baseStyle: {
+      control: {
+        borderColor: 'gray.300',
+        _focus: {
+          boxShadow: '0 0 0 2px var(--chakra-colors-brand-100)',
+        },
+        _hover: {
+          borderColor: 'brand.500',
+        },
+      },
     },
   },
   Table: {
@@ -194,6 +269,27 @@ const components = {
       },
     },
   },
+  FormLabel: {
+    baseStyle: {
+      fontWeight: 'medium',
+      color: 'gray.700',
+      mb: 1,
+    },
+  },
+  FormHelperText: {
+    baseStyle: {
+      color: 'gray.500',
+      fontSize: 'xs',
+      mt: 1,
+    },
+  },
+  FormErrorMessage: {
+    baseStyle: {
+      color: 'error.500',
+      fontSize: 'xs',
+      mt: 1,
+    },
+  },
 };
 
 // Global styles
@@ -206,7 +302,7 @@ const styles = {
   },
 };
 
-// Layout styles
+// Layer styles
 const layerStyles = {
   card: {
     bg: 'white',
@@ -225,6 +321,29 @@ const layerStyles = {
     borderColor: 'gray.100',
     boxShadow: 'sm',
   },
+  formInput: {
+    bg: 'white',
+    borderWidth: '1px',
+    borderColor: 'gray.300',
+    borderRadius: 'md',
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+    _hover: {
+      borderColor: 'gray.400',
+    },
+    _focus: {
+      borderColor: 'brand.500',
+      boxShadow: '0 0 0 1px var(--chakra-colors-brand-500)',
+    },
+  },
+};
+
+// Custom text styles
+const textStyles = {
+  formLabel: {
+    fontWeight: 'medium',
+    fontSize: 'sm',
+    color: 'gray.700',
+  },
 };
 
 const theme = extendTheme({
@@ -233,6 +352,7 @@ const theme = extendTheme({
   components,
   styles,
   layerStyles,
+  textStyles,
 });
 
 export default theme;

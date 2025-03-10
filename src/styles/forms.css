@@ -1,0 +1,59 @@
+/* src/styles/forms.css */
+@layer components {
+    .form-input {
+      @apply w-full rounded-md border-gray-300 bg-white shadow-sm;
+      @apply hover:border-gray-400 focus:border-[#3d5291] focus:ring focus:ring-[#3d5291] focus:ring-opacity-20;
+    }
+  
+    .form-select {
+      @apply w-full rounded-md border-gray-300 bg-white shadow-sm pr-10;
+      @apply hover:border-gray-400 focus:border-[#3d5291] focus:ring focus:ring-[#3d5291] focus:ring-opacity-20;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.5rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+  
+    .form-textarea {
+      @apply w-full rounded-md border-gray-300 bg-white shadow-sm;
+      @apply hover:border-gray-400 focus:border-[#3d5291] focus:ring focus:ring-[#3d5291] focus:ring-opacity-20;
+    }
+  
+    .form-checkbox {
+      @apply rounded border-gray-300 text-[#3d5291];
+      @apply focus:ring-[#3d5291] focus:ring-opacity-20;
+    }
+  
+    .form-radio {
+      @apply border-gray-300 text-[#3d5291];
+      @apply focus:ring-[#3d5291] focus:ring-opacity-20;
+    }
+  
+    .form-label {
+      @apply block text-sm font-medium text-gray-700 mb-1;
+    }
+  
+    .search-input {
+      @apply flex w-full items-center bg-white px-3 py-2 rounded-lg border border-gray-300 shadow-sm;
+      @apply hover:border-gray-400 focus-within:border-[#3d5291] focus-within:ring-1 focus-within:ring-[#3d5291];
+    }
+  
+    .search-input input {
+      @apply w-full ml-2 focus:outline-none bg-transparent;
+    }
+  
+    /* Form group - container for form elements */
+    .form-group {
+      @apply mb-4;
+    }
+  
+    /* Styles for disabled inputs */
+    .form-input:disabled, 
+    .form-select:disabled, 
+    .form-textarea:disabled {
+      @apply bg-gray-50 opacity-70 cursor-not-allowed;
+    }
+  }
