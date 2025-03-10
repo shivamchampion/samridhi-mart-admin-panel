@@ -1,8 +1,8 @@
-// src/pages/Login.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, LogIn } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { LogoFull } from '../components/logo';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -46,86 +46,100 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-600 dark:to-primary-800 p-4">
+      <div 
+        className="w-full max-w-md bg-white dark:bg-primary-700 rounded-2xl shadow-2xl p-8 space-y-6 animate-fade-in"
+      >
         <div className="text-center">
-          {/* Removed logo image to prevent 404 error */}
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">Samridhi Mart</h2>
-          <h3 className="mt-2 text-xl text-gray-600">Admin Login</h3>
+          <LogoFull className="mx-auto mb-6" />
+          <h2 className="text-2xl font-bold text-primary dark:text-white">Admin Login</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-300 mt-2">
+            Sign in to manage your Samridhi Mart system
+          </p>
         </div>
         
         {(localError || authContextError) && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+          <div 
+            className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded-md"
+          >
             {localError || authContextError}
           </div>
         )}
         
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <div className="mt-1 relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
-                  )}
-                </button>
-              </div>
-            </div>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label 
+              htmlFor="email" 
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Email address
+            </label>
+            <input
+              id="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-primary-600 rounded-md shadow-sm 
+                         focus:outline-none focus:ring-2 focus:ring-primary 
+                         dark:bg-primary-800 dark:text-white"
+            />
           </div>
           
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#3d5291] hover:bg-[#2d3e6d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-70"
+          <div className="relative">
+            <label 
+              htmlFor="password" 
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
             >
-              {isLoading ? (
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              ) : (
-                <LogIn className="h-5 w-5 mr-2" />
-              )}
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              Password
+            </label>
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-primary-600 rounded-md shadow-sm 
+                         focus:outline-none focus:ring-2 focus:ring-primary 
+                         dark:bg-primary-800 dark:text-white pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-10 transform -translate-y-1/2 text-gray-400 dark:text-gray-300"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
+          
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full flex justify-center items-center py-3 px-4 
+                       bg-primary text-white rounded-md 
+                       hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary 
+                       transition-colors duration-300
+                       disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? (
+              <span className="animate-spin mr-2">🔄</span>
+            ) : (
+              <LogIn className="mr-2" size={20} />
+            )}
+            {isLoading ? 'Signing in...' : 'Sign In'}
+          </button>
         </form>
+        
+        <div className="text-center mt-4">
+          <a 
+            href="#" 
+            className="text-sm text-primary hover:underline dark:text-primary-300"
+          >
+            Forgot Password?
+          </a>
+        </div>
       </div>
     </div>
   );

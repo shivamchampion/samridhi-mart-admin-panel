@@ -3,42 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #3d5291;
-  --primary-hover: #2d3e6d;
-  --secondary-color: #f9a826;
+  /* Light theme variables */
+  --background: 0 0% 100%;
+  --foreground: 224 71.4% 4.1%;
+  --primary: 220.9 39.3% 11%;
+  --primary-foreground: 210 20% 98%;
+  /* Add more color variables */
 }
 
-html, body {
-  height: 100%;
+.dark {
+  /* Dark theme variables */
+  --background: 224 71.4% 4.1%;
+  --foreground: 210 20% 98%;
+  --primary: 210 20% 98%;
+  --primary-foreground: 220.9 39.3% 11%;
+  /* Add more color variables */
 }
 
+/* Additional global styles */
 body {
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-  background-color: #f5f7fb;
+  @apply bg-background text-foreground;
 }
 
-#root {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a1a1a1;
-}
+/* Add more global styles for consistent design */
